@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Humb.Core.Entities
 {
-    public partial class Block : BaseEntity
+    public partial class BlockUser : BaseEntity
     {
         public int FromUserID { get; set; }
 

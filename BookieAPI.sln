@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookieAPI", "BookieAPI\BookieAPI.csproj", "{90A6691E-F90F-4BEE-A0FB-2793D9B22573}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchedulerTasks", "SchedulerTasks\SchedulerTasks.csproj", "{F6FF2449-BBEB-410D-A250-68149C63492A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Humb.Core", "Humb.Core\Humb.Core.csproj", "{0C38CD0B-53EA-42EE-BD61-64BE375063CF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Humb.Core", "Humb.Core\Humb.Core.csproj", "{BB0C6D93-FB73-43DA-9E0F-057E153D873D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Humb.Data", "Humb.Data\Humb.Data.csproj", "{43576AB7-A6F6-4D9D-AE5A-546D575C3A03}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Humb.Data", "Humb.Data\Humb.Data.csproj", "{D5D8836B-DE2B-46DF-A9DF-BDAA797469F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookieAPI", "BookieAPI\BookieAPI.csproj", "{90A6691E-F90F-4BEE-A0FB-2793D9B22573}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,22 +17,22 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{90A6691E-F90F-4BEE-A0FB-2793D9B22573}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{90A6691E-F90F-4BEE-A0FB-2793D9B22573}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{90A6691E-F90F-4BEE-A0FB-2793D9B22573}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{90A6691E-F90F-4BEE-A0FB-2793D9B22573}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F6FF2449-BBEB-410D-A250-68149C63492A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F6FF2449-BBEB-410D-A250-68149C63492A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6FF2449-BBEB-410D-A250-68149C63492A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6FF2449-BBEB-410D-A250-68149C63492A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0C38CD0B-53EA-42EE-BD61-64BE375063CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0C38CD0B-53EA-42EE-BD61-64BE375063CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0C38CD0B-53EA-42EE-BD61-64BE375063CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0C38CD0B-53EA-42EE-BD61-64BE375063CF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{43576AB7-A6F6-4D9D-AE5A-546D575C3A03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{43576AB7-A6F6-4D9D-AE5A-546D575C3A03}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{43576AB7-A6F6-4D9D-AE5A-546D575C3A03}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{43576AB7-A6F6-4D9D-AE5A-546D575C3A03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB0C6D93-FB73-43DA-9E0F-057E153D873D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB0C6D93-FB73-43DA-9E0F-057E153D873D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB0C6D93-FB73-43DA-9E0F-057E153D873D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB0C6D93-FB73-43DA-9E0F-057E153D873D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5D8836B-DE2B-46DF-A9DF-BDAA797469F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5D8836B-DE2B-46DF-A9DF-BDAA797469F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5D8836B-DE2B-46DF-A9DF-BDAA797469F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5D8836B-DE2B-46DF-A9DF-BDAA797469F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90A6691E-F90F-4BEE-A0FB-2793D9B22573}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90A6691E-F90F-4BEE-A0FB-2793D9B22573}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90A6691E-F90F-4BEE-A0FB-2793D9B22573}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90A6691E-F90F-4BEE-A0FB-2793D9B22573}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

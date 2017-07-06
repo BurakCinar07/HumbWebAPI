@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{43576AB7-A6F6-4D9D-AE5A-546D575C3A03}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{D5D8836B-DE2B-46DF-A9DF-BDAA797469F1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Humb.Data</RootNamespace>
     <AssemblyName>Humb.Data</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -41,8 +39,6 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -53,16 +49,23 @@
   <ItemGroup>
     <Compile Include="EFDbContext.cs" />
     <Compile Include="IDbContext.cs" />
+    <Compile Include="Mapping\BlockUserMap.cs" />
+    <Compile Include="Mapping\BookInteractionMap.cs" />
     <Compile Include="Mapping\BookMap.cs" />
+    <Compile Include="Mapping\BookRequestMap.cs" />
     <Compile Include="Mapping\UserMap.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Humb.Core\Humb.Core.csproj">
-      <Project>{0c38cd0b-53ea-42ee-bd61-64be375063cf}</Project>
+      <Project>{bb0c6d93-fb73-43da-9e0f-057e153d873d}</Project>
       <Name>Humb.Core</Name>
     </ProjectReference>
   </ItemGroup>
