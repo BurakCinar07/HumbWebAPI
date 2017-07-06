@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Humb.Data
 {
-    public class EFDbContext : DbContext, IDbContext
+    public class EFDbContext : DbContext
     {
         public EFDbContext() : base("name=DbConnectionString")
         {
@@ -30,10 +30,6 @@ namespace Humb.Data
                 modelBuilder.Configurations.Add(configurationInstance);
             }            
             base.OnModelCreating(modelBuilder);
-        }
-        IDbSet<TEntity> IDbContext.Set<TEntity>()
-        {
-            return base.Set<TEntity>();
         }
         
     }

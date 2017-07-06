@@ -10,7 +10,7 @@ namespace Humb.Data
 {
     public class Repository<T> : IRepository<T> where T : BaseEntity
     {
-        private readonly IDbContext _context;
+        private readonly EFDbContext _context;
         private IDbSet<T> _entities;
 
         private IDbSet<T> Entities
@@ -25,7 +25,7 @@ namespace Humb.Data
             }
         }
 
-        public Repository(IDbContext context)
+        public Repository(EFDbContext context)
         {
             _context = context;
         }

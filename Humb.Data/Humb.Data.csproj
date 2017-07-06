@@ -48,7 +48,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EFDbContext.cs" />
-    <Compile Include="IDbContext.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="Mapping\BlockUserMap.cs" />
     <Compile Include="Mapping\BookInteractionMap.cs" />
