@@ -11,5 +11,6 @@ namespace Humb.Data
     public interface IDbContext
     {
         IDbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity;
+        int SaveChanges();
     }
 }

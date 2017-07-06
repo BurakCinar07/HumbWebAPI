@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="EFDbContext.cs" />
     <Compile Include="IDbContext.cs" />
+    <Compile Include="IRepository.cs" />
     <Compile Include="Mapping\BlockUserMap.cs" />
     <Compile Include="Mapping\BookInteractionMap.cs" />
     <Compile Include="Mapping\BookMap.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="Mapping\UserMap.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

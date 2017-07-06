@@ -33,7 +33,8 @@ namespace Humb.Data
         }
         IDbSet<TEntity> IDbContext.Set<TEntity>()
         {
-            throw new NotImplementedException();
+            return base.Set<TEntity>();
         }
+        
     }
 }
