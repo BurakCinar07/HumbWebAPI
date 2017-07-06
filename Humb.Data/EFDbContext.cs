@@ -28,7 +28,7 @@ namespace Humb.Data
             {
                 dynamic configurationInstance = Activator.CreateInstance(type);
                 modelBuilder.Configurations.Add(configurationInstance);
-            }
+            }            
             base.OnModelCreating(modelBuilder);
         }
         IDbSet<TEntity> IDbContext.Set<TEntity>()

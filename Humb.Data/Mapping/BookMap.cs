@@ -24,7 +24,7 @@ namespace Humb.Data.Mapping
             Property(t => t.OwnerID).IsRequired().HasColumnType("int");
             Property(t => t.AddedByID).IsRequired().HasColumnType("int");
             Property(t => t.CreatedAt).IsRequired().HasColumnType("datetime2").HasPrecision(7);
-
+                
         }
     }
 }

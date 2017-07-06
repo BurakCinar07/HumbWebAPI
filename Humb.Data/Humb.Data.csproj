@@ -53,6 +53,14 @@
     <Compile Include="Mapping\BookInteractionMap.cs" />
     <Compile Include="Mapping\BookMap.cs" />
     <Compile Include="Mapping\BookRequestMap.cs" />
+    <Compile Include="Mapping\BookTransactionMap.cs" />
+    <Compile Include="Mapping\FeedbackMap.cs" />
+    <Compile Include="Mapping\ForgottenPasswordMap.cs" />
+    <Compile Include="Mapping\InfiltratorMap.cs" />
+    <Compile Include="Mapping\LovedGenreMap.cs" />
+    <Compile Include="Mapping\MessageMap.cs" />
+    <Compile Include="Mapping\ReportBookMap.cs" />
+    <Compile Include="Mapping\ReportUserMap.cs" />
     <Compile Include="Mapping\UserMap.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

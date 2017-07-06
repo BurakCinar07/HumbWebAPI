@@ -32,12 +32,14 @@ namespace SchedulerTasks
                     {
                         Book book = context.Books.FirstOrDefault(x => x.bookID == transaction.bookID);
                         book.bookState = Constants.STATE_LOST;
-                        BookTransaction bt = new BookTransaction();
-                        bt.bookID = transaction.bookID;
-                        bt.createdAt = DateTime.Now;
-                        bt.giverUserID = transaction.giverUserID;
-                        bt.takerUserID = transaction.takerUserID;
-                        bt.transactionType = Constants.TRANSACTION_LOST;
+                        BookTransaction bt = new BookTransaction()
+                        {
+                            bookID = transaction.bookID,
+                            createdAt = DateTime.Now,
+                            giverUserID = transaction.giverUserID,
+                            takerUserID = transaction.takerUserID,
+                            transactionType = Constants.TRANSACTION_LOST
+                        };
                         context.BookTransactions.Add(bt);
                     }
                 }
@@ -49,7 +51,7 @@ namespace SchedulerTasks
                 File.AppendAllText(errorPath, Environment.NewLine + e.Message + "\t Date : " + DateTime.Now);
                 if (!string.IsNullOrEmpty(e.InnerException.Message))
                 {
-                    File.AppendAllText(errorPath, " \t Inner Exception : " + e.Message);
+                    File.AppendAllText(errorPath, " \t Inner Exception : " + e.InnerException.Message);
                 }
             }
         }
