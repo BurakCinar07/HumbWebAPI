@@ -16,7 +16,7 @@ namespace Humb.Data.Mapping
             Property(t => t.ID).HasDatabaseGeneratedOption(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity);
             Property(t => t.CreatedAt).HasColumnType("datetime2").HasPrecision(7);
 
-            Property(t => t.MessageText).IsRequired().HasColumnType("nvarchar(max)");
+            Property(t => t.MessageText).IsRequired().HasColumnType("nvarchar(max)");            
         }
     }
 }
