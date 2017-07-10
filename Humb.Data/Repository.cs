@@ -1,8 +1,10 @@
 ﻿using Humb.Core.Entities;
+using Humb.Core.Interfaces.RepositoryInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,7 +36,6 @@ namespace Humb.Data
         {
             return Entities.Find(id);
         }
-
         public virtual void Insert(T entity)
         {
             try
@@ -44,14 +45,14 @@ namespace Humb.Data
                     throw new ArgumentNullException("Insert");
                 }
                 Entities.Add(entity);
+                _context.SaveChanges();
             }
             catch (Exception e)
             {
                 // TODO : Loglama işlemlerini burda yap
             }
         }
-
-        public virtual void Update(T entity)
+        public virtual void Update(T entity, int id)
         {
             try
             {
@@ -59,7 +60,12 @@ namespace Humb.Data
                 {
                     throw new ArgumentNullException("entity");
                 }
-                Save();
+                T existing = Entities.Find(id);
+                if (existing != null)
+                {
+                    _context.Entry(entity).CurrentValues.SetValues(entity);
+                    _context.SaveChanges();
+                }
             }
             catch (Exception e)
             {
@@ -75,24 +81,45 @@ namespace Humb.Data
                     throw new ArgumentNullException("entity");
                 }
                 Entities.Remove(entity);
+                _context.SaveChanges();
             }
             catch (Exception e)
             {
                 //TODO : Logging
             }
         }
-        public IQueryable<T> FindBy(System.Linq.Expressions.Expression<Func<T, bool>> predicate)
+        public T FindSingleBy(Expression<Func<T, bool>> match)
         {
-            IQueryable<T> query = Entities.Where(predicate);
-            return query;
+            return Entities.FirstOrDefault(match);
+        }
+        public Task<T> FindSingleByAsync(Expression<Func<T, bool>> match)
+        {
+            return Entities.FirstOrDefaultAsync(match);
+        }
+        public IQueryable<T> FindBy(Expression<Func<T, bool>> match)
+        {
+            return Entities.Where(match);
+        }
+        public async Task<ICollection<T>> FindByAsync(Expression<Func<T, bool>> match)
+        {
+            return await Entities.Where(match).ToListAsync();
         }
         public virtual IQueryable<T> GetAll()
         {
             return Entities;
         }
+        public async Task<ICollection<T>> GetAllAsync()
+        {
+            return await _context.Set<T>().ToListAsync();
+        }
+        public int Count()
+        {
+            return Entities.Count();
+        }
         public virtual void Save()
         {
             _context.SaveChanges();
         }
+
     }
 }

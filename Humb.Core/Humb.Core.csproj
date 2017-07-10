@@ -54,10 +54,14 @@
     <Compile Include="Entities\ReportBook.cs" />
     <Compile Include="Entities\ReportUser.cs" />
     <Compile Include="Entities\User.cs" />
+    <Compile Include="Interfaces\RepositoryInterfaces\IRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Interfaces\ServiceInterfaces\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
