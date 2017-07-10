@@ -237,7 +237,6 @@
     <Compile Include="Controllers\EmailVerificationController.cs" />
     <Compile Include="Controllers\FeedbackController.cs" />
     <Compile Include="Controllers\Utils\FcmUtils.cs" />
-    <Compile Include="Controllers\Utils\Helpers.cs" />
     <Compile Include="Controllers\HomePageController.cs" />
     <Compile Include="Controllers\MessageFetchController.cs" />
     <Compile Include="Controllers\ProfilePictureUploadController.cs" />

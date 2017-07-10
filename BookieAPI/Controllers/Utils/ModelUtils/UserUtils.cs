@@ -520,6 +520,5 @@ namespace BookieAPI.Controllers.Utils
             return bms;
         }
 
-
     }
 }
