@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
-
-namespace BookieAPI.Controllers.Utils
+using System.Threading.Tasks;
+using System.Security.Cryptography;
+namespace Humb.Service
 {
-    public static class TextUtils
+    public static class Helper
     {
         public static string SanitizeInput(string input)
         {
@@ -53,7 +54,7 @@ namespace BookieAPI.Controllers.Utils
             else
             {
                 return new int[0];
-            } 
+            }
         }
         public static int GetCommonCharacters(string searchString, string otherString)
         {
@@ -93,16 +94,6 @@ namespace BookieAPI.Controllers.Utils
                 chars[i] = allowedChars[rd.Next(0, allowedChars.Length)];
             }
             return new string(chars);
-        }
-
-        public static bool IsNameSurnameValid(string nameSurname)
-        {
-            return true;
-            //if (Regex.Match(nameSurname, "^[a-zA-ZàáâäãåąčćçęèéêëėğıįìíîïłńòóôöõøşùúûüųūÿýżźñšžÀÁÂÄÃÅĄĆČÇĖĘÈÉÊËĞİÌÍÎÏĮŁŃÒÓÔÖÕØŞÙÚÛÜŲŪŸÝŻŹÑßŒÆŠŽ∂ð ,.'-]{3,70}+$").Success)
-            //{
-            //    return true;
-            //}
-            //return false;
         }
     }
 }

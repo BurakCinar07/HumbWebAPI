@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 //TO DO : User utilsde olup burda olmayan metodları search servisine ekle.
 namespace Humb.Core.Interfaces.ServiceInterfaces
 {
-    interface IUserService
+    public interface IUserService
     {
+        void CreateUser(string email, string password, string nameSurname);
         bool UserEmailExist(string email);
         bool UserExist(int userId);
         bool UserExist(string email, string password);
