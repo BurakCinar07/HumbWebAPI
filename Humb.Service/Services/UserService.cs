@@ -30,7 +30,6 @@ namespace Humb.Service.Services
                 EmailVerified = false,
                 VerificationHash = Helper.CalculateMD5Hash(new Random().Next(0, 1000).ToString()),
             };  
-
             userRepository.Insert(user);  
         }
         public void BlockUser(int fromUserId, int toUserId)
