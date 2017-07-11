@@ -8,7 +8,7 @@ namespace Humb.Core.Entities
 {
     public partial class Infiltrator : BaseEntity
     {        
-        public string IPAdress { get; set; }        
+        public string IpAdress { get; set; }        
 
         public int Reason { get; set; }
 

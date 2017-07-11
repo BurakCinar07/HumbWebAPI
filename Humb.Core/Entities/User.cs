@@ -19,9 +19,9 @@ namespace Humb.Core.Entities
         
         public string Password { get; set; }
         
-        public string ProfilePictureURL { get; set; }
+        public string ProfilePictureUrl { get; set; }
 
-        public string ProfilePictureThumbnailURL { get; set; }
+        public string ProfilePictureThumbnailUrl { get; set; }
         public string Bio { get; set; }
 
         public double? Latitude { get; set; }

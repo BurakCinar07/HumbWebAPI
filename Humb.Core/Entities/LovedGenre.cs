@@ -8,7 +8,7 @@ namespace Humb.Core.Entities
 {
     public partial class LovedGenre : BaseEntity
     {
-        public int UserID { get; set; }
+        public int UserId { get; set; }
 
         public int GenreCode { get; set; }
 

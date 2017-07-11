@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookieAPI", "BookieAPI\Book
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Humb.Service", "Humb.Service\Humb.Service.csproj", "{472AA638-A88F-4F3E-957F-804CE471CBC2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Humb.Test", "Humb.Test\Humb.Test.csproj", "{64E5535D-D397-41F0-AFBC-CC821FB69076}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Humb.API", "Humb.API\Humb.API.csproj", "{2DA22849-BF11-4EC2-A934-1847E209C606}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{472AA638-A88F-4F3E-957F-804CE471CBC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{472AA638-A88F-4F3E-957F-804CE471CBC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{472AA638-A88F-4F3E-957F-804CE471CBC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64E5535D-D397-41F0-AFBC-CC821FB69076}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64E5535D-D397-41F0-AFBC-CC821FB69076}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64E5535D-D397-41F0-AFBC-CC821FB69076}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64E5535D-D397-41F0-AFBC-CC821FB69076}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DA22849-BF11-4EC2-A934-1847E209C606}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DA22849-BF11-4EC2-A934-1847E209C606}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DA22849-BF11-4EC2-A934-1847E209C606}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DA22849-BF11-4EC2-A934-1847E209C606}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

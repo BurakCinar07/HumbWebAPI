@@ -24,13 +24,13 @@ namespace Humb.Core.Entities
 
         public int GenreCode { get; set; }
 
-        public string BookPictureURL { get; set; }
+        public string BookPictureUrl { get; set; }
         
-        public string BookPictureThumbnailURL { get; set; }
+        public string BookPictureThumbnailUrl { get; set; }
 
-        public int OwnerID { get; set; }
+        public int OwnerId { get; set; }
 
-        public int AddedByID { get; set; }
+        public int AddedById { get; set; }
 
         public virtual ICollection<BookRequest> BookRequests { get; set; }
 

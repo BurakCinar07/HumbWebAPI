@@ -8,8 +8,8 @@ namespace Humb.Core.Entities
 {
     public partial class BlockUser : BaseEntity
     {
-        public int FromUserID { get; set; }
+        public int FromUserId { get; set; }
 
-        public int ToUserID { get; set; }
+        public int ToUserId { get; set; }
     }
 }

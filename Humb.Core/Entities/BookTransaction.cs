@@ -8,11 +8,11 @@ namespace Humb.Core.Entities
 {
     public partial class BookTransaction : BaseEntity
     {
-        public int GiverUserID { get; set; }
+        public int GiverUserId { get; set; }
 
-        public int TakerUserID { get; set; }
+        public int TakerUserId { get; set; }
 
-        public int BookID { get; set; }
+        public int BookId { get; set; }
 
         public int TransactionType { get; set; }
 

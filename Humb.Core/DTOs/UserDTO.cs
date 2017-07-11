@@ -8,7 +8,7 @@ namespace Humb.Core.DTOs
 {
     public class UserDTO
     {
-        public int Id { get; set; }
+        public int ID { get; set; }
         public string NameSurname { get; set; }
         public string ProfilePictureURL { get; set; }
         public string ProfilePictureThumbnailURL { get; set; }

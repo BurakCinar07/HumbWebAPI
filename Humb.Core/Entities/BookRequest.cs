@@ -8,9 +8,9 @@ namespace Humb.Core.Entities
 {
     public partial class BookRequest : BaseEntity
     {        
-        public int RequestingUserID { get; set; }
+        public int RequestingUserId { get; set; }
 
-        public int RespondingUserID { get; set; }
+        public int RespondingUserId { get; set; }
 
         public int BookID { get; set; }
 

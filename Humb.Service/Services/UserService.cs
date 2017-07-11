@@ -10,7 +10,7 @@ using Humb.Core.Interfaces.RepositoryInterfaces;
 
 namespace Humb.Service.Services
 {
-    class UserService : IUserService
+    public class UserService : IUserService
     {
         private IRepository<User> userRepository;
 

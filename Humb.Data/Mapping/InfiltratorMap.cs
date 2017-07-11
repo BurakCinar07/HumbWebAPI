@@ -12,11 +12,11 @@ namespace Humb.Data.Mapping
     {
         public InfiltratorMap()
         {
-            HasKey(t => t.ID);
-            Property(t => t.ID).HasDatabaseGeneratedOption(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity);
+            HasKey(t => t.Id);
+            Property(t => t.Id).HasDatabaseGeneratedOption(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity);
             Property(t => t.CreatedAt).HasColumnType("datetime2").HasPrecision(7);
 
-            Property(t => t.IPAdress).IsRequired().HasColumnType("nvarchar").HasMaxLength(64);
+            Property(t => t.IpAdress).IsRequired().HasColumnType("nvarchar").HasMaxLength(64);
             Property(t => t.ExtraInfo).HasColumnType("nvarchar(max)");
         }
     }

@@ -12,15 +12,15 @@ namespace Humb.Data.Mapping
     {
         public UserMap()
         {
-            HasKey(t => t.ID);
-            Property(t => t.ID).HasDatabaseGeneratedOption(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity);
+            HasKey(t => t.Id);
+            Property(t => t.Id).HasDatabaseGeneratedOption(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity);
             Property(t => t.CreatedAt).IsRequired().HasColumnType("datetime2").HasPrecision(7);
 
             Property(t => t.NameSurname).IsRequired().HasMaxLength(128).HasColumnType("nvarchar");
             Property(t => t.Email).IsRequired().HasMaxLength(256).HasColumnType("nvarchar");
             Property(t => t.Password).IsRequired().HasMaxLength(64).HasColumnType("nvarchar");
-            Property(t => t.ProfilePictureURL).HasMaxLength(1024).HasColumnType("nvarchar");
-            Property(t => t.ProfilePictureThumbnailURL).HasMaxLength(1024).HasColumnType("nvarchar");
+            Property(t => t.ProfilePictureUrl).HasMaxLength(1024).HasColumnType("nvarchar");
+            Property(t => t.ProfilePictureThumbnailUrl).HasMaxLength(1024).HasColumnType("nvarchar");
             Property(t => t.Bio).HasMaxLength(1024).HasColumnType("nvarchar");
             Property(t => t.Latitude).IsOptional().HasColumnType("float");
             Property(t => t.Longitude).IsOptional().HasColumnType("float");

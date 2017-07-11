@@ -12,8 +12,8 @@ namespace Humb.Data.Mapping
     {
         public ReportBookMap()
         {
-            HasKey(t => t.ID);
-            Property(t => t.ID).HasDatabaseGeneratedOption(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity);
+            HasKey(t => t.Id);
+            Property(t => t.Id).HasDatabaseGeneratedOption(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity);
             Property(t => t.CreatedAt).HasColumnType("datetime2").HasPrecision(7);
 
             Property(t => t.ReportInfo).HasColumnType("nvarchar(max)");

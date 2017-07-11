@@ -27,9 +27,9 @@ namespace Humb.Data
             }
         }
 
-        public Repository(EFDbContext context)
+        public Repository()
         {
-            _context = context;
+            _context = new EFDbContext();
         }
 
         public T GetById(object id)
@@ -112,6 +112,7 @@ namespace Humb.Data
         {
             return await _context.Set<T>().ToListAsync();
         }
+        
         public int Count()
         {
             return Entities.Count();

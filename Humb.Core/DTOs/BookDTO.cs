@@ -12,7 +12,7 @@ namespace Humb.Core.DTOs
         {
             this.Owner = new UserDTO();
         }
-        public int Id { get; set; }
+        public int ID { get; set; }
         public string BookName { get; set; }
         public string BookPictureURL { get; set; }
         public string BookPictureThumbnailURL { get; set; }

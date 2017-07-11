@@ -12,6 +12,6 @@ namespace Humb.Core.Entities
 
         public bool IsChecked { get; set; }
 
-        public int UserID { get; set; }
+        public int UserId { get; set; }
     }
 }
