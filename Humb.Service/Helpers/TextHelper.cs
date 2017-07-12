@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
-namespace Humb.Service
+namespace Humb.Service.Helpers
 {
-    public static class Helper
+    public static class TextHelper
     {
         public static string SanitizeInput(string input)
         {

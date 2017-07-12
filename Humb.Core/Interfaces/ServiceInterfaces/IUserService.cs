@@ -11,6 +11,7 @@ namespace Humb.Core.Interfaces.ServiceInterfaces
     public interface IUserService
     {
         void CreateUser(string email, string password, string nameSurname);
+        int GetTotalUserCount();
         bool UserEmailExist(string email);
         bool UserExist(int userId);
         bool UserExist(string email, string password);

@@ -17,7 +17,8 @@ namespace Humb.API.IoC.Installers
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
             container.Register(Component.For<IUserService>().ImplementedBy<UserService>().LifestylePerWebRequest());
-            container.Register(Component.For(typeof(IRepository<>)).ImplementedBy(typeof(Repository<>)).DependsOn(new EFDbContext()).LifestylePerWebRequest());            
+            container.Register(Component.For(typeof(IRepository<>)).ImplementedBy(typeof(Repository<>)).LifestylePerWebRequest());
+            container.Register(Component.For<IDbContext>().ImplementedBy<EFDbContext>());
         }
     }
 }

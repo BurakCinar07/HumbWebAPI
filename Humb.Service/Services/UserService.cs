@@ -7,17 +7,20 @@ using Humb.Core.DTOs;
 using Humb.Core.Entities;
 using Humb.Core.Interfaces.ServiceInterfaces;
 using Humb.Core.Interfaces.RepositoryInterfaces;
-
+using Humb.Service.Helpers;
 namespace Humb.Service.Services
 {
     public class UserService : IUserService
     {
         private IRepository<User> _userRepository;
         private IRepository<BlockUser> _blockUserRepository;
-        public UserService(IRepository<User> userRepo, IRepository<BlockUser> blockUserRepo)
+        private IRepository<ForgottenPassword> _forgottenPasswordsRepository;
+        public UserService(IRepository<User> userRepo, IRepository<BlockUser> blockUserRepo, IRepository<ForgottenPassword> forgottenPasswordsRepo)
         {
             this._userRepository = userRepo;
             this._blockUserRepository = blockUserRepo;
+            this._forgottenPasswordsRepository = forgottenPasswordsRepo;
+
         }
 
         public void CreateUser(string email, string password, string nameSurname)
@@ -29,7 +32,7 @@ namespace Humb.Service.Services
                 NameSurname = nameSurname,
                 CreatedAt = DateTime.Now,
                 EmailVerified = false,
-                VerificationHash = Helper.CalculateMD5Hash(new Random().Next(0, 1000).ToString()),
+                VerificationHash = TextHelper.CalculateMD5Hash(new Random().Next(0, 1000).ToString()),
             };
             _userRepository.Insert(user);
         }
@@ -43,15 +46,31 @@ namespace Humb.Service.Services
             };
             _blockUserRepository.Insert(blockedUsers);
         }
-
-        public string ChangeUserPassword(string email, string password)
+        public int GetTotalUserCount()
         {
-            throw new NotImplementedException();
+            return _userRepository.Count();
+        }
+        public string ChangeUserPassword(string email, string newPassword)
+        {
+            User user = GetUser(email);
+            user.Password = TextHelper.CalculateMD5Hash(newPassword);
+            _userRepository.Update(user, user.Id);
+            return user.Password;
         }
 
         public void ConfirmPasswordChange(string email, string token)
         {
-            throw new NotImplementedException();
+            ForgottenPassword fp = _forgottenPasswordsRepository.FindSingleBy(x => x.Email == email && x.Token == token);
+            if (fp != null)
+            {
+                User user = GetUser(email);
+                user.Password = TextHelper.CalculateMD5Hash(fp.NewPassword);
+                if (!user.EmailVerified)
+                {
+                    user.EmailVerified = true;
+                }
+                _forgottenPasswordsRepository.Delete(fp);
+            }
         }
 
         public bool DoesUserLocationExist(string email)

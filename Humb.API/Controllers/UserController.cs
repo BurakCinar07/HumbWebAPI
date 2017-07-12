@@ -24,7 +24,7 @@ namespace Humb.API.Controllers
         [HttpGet]
         public string RegisterUser()
         {
-            _userService.CreateUser("burak", "asdfasdf", "dsafsdgsdf");
+            _userService.CreateUser("bab", "asdfasdf", "dsafsdgsdf");
             return null;
         }
         [HttpGet]
@@ -33,5 +33,16 @@ namespace Humb.API.Controllers
             _userService.BlockUser(1, 2);
             return null;
         }
+        [HttpGet]
+        public int GetTotalUserCount()
+        {
+            return _userService.GetTotalUserCount();
+        }
+        [HttpGet]
+        public string ChangeUserPassword()
+        {
+            return _userService.ChangeUserPassword("bab", "121334");
+        }
+
     }
 }
