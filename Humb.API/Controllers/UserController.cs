@@ -27,5 +27,11 @@ namespace Humb.API.Controllers
             _userService.CreateUser("burak", "asdfasdf", "dsafsdgsdf");
             return null;
         }
+        [HttpGet]
+        public string BlockUser()
+        {
+            _userService.BlockUser(1, 2);
+            return null;
+        }
     }
 }

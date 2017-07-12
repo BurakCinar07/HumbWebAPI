@@ -12,7 +12,7 @@ namespace Humb.Data
 {
     public class Repository<T> : IRepository<T> where T : BaseEntity
     {
-        private readonly EFDbContext _context;
+        private readonly IDbContext _context;
         private IDbSet<T> _entities;
 
         private IDbSet<T> Entities
@@ -27,9 +27,9 @@ namespace Humb.Data
             }
         }
 
-        public Repository()
+        public Repository(IDbContext context)
         {
-            _context = new EFDbContext();
+            this._context = context;
         }
 
         public T GetById(object id)
@@ -111,8 +111,7 @@ namespace Humb.Data
         public async Task<ICollection<T>> GetAllAsync()
         {
             return await _context.Set<T>().ToListAsync();
-        }
-        
+        }        
         public int Count()
         {
             return Entities.Count();

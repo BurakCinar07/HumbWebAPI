@@ -12,11 +12,12 @@ namespace Humb.Service.Services
 {
     public class UserService : IUserService
     {
-        private IRepository<User> userRepository;
-
-        public UserService(IRepository<User> userRepository)
+        private IRepository<User> _userRepository;
+        private IRepository<BlockUser> _blockUserRepository;
+        public UserService(IRepository<User> userRepo, IRepository<BlockUser> blockUserRepo)
         {
-            this.userRepository = userRepository;
+            this._userRepository = userRepo;
+            this._blockUserRepository = blockUserRepo;
         }
 
         public void CreateUser(string email, string password, string nameSurname)
@@ -29,12 +30,18 @@ namespace Humb.Service.Services
                 CreatedAt = DateTime.Now,
                 EmailVerified = false,
                 VerificationHash = Helper.CalculateMD5Hash(new Random().Next(0, 1000).ToString()),
-            };  
-            userRepository.Insert(user);  
+            };
+            _userRepository.Insert(user);
         }
         public void BlockUser(int fromUserId, int toUserId)
         {
-            throw new NotImplementedException();
+            BlockUser blockedUsers = new BlockUser()
+            {
+                FromUserId = fromUserId,
+                ToUserId = toUserId,
+                CreatedAt = DateTime.Now
+            };
+            _blockUserRepository.Insert(blockedUsers);
         }
 
         public string ChangeUserPassword(string email, string password)
@@ -59,7 +66,7 @@ namespace Humb.Service.Services
 
         public User GetUser(string email)
         {
-            throw new NotImplementedException();
+            return _userRepository.FindSingleBy(x => x.Email == email);
         }
 
         public User GetUser(int userId)

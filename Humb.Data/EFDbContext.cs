@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Humb.Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Humb.Data
 {
-    public class EFDbContext : DbContext
+    public class EFDbContext : DbContext, IDbContext
     {
         public EFDbContext() : base("name=DbConnectionString")
         {
@@ -31,6 +32,10 @@ namespace Humb.Data
             }            
             base.OnModelCreating(modelBuilder);
         }
-        
+
+        public new IDbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity
+        {
+            return base.Set<TEntity>();
+        }
     }
 }
