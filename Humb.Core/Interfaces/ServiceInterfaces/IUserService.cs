@@ -27,7 +27,7 @@ namespace Humb.Core.Interfaces.ServiceInterfaces
         bool DoesUserLocationExist(string email);
         bool IsUserBlocked(int fromUserId, int toUserId);
         void BlockUser(int fromUserId, int toUserId);
-        void ConfirmPasswordChange(string email, string token);
+        void ConfirmForgottenPasswordRequest(string email, string token);
         string[] SaveUserProfilePicture(string email, string path, string thumbnailPath);
         void ReportUser(int fromUserID, int toUserID, int reportCode, string reportInfo);
         void ResendEmailVerification(string email);
@@ -36,8 +36,8 @@ namespace Humb.Core.Interfaces.ServiceInterfaces
         void UpdateUserLocation(string email, double latidue, double longitude);
         void UpdateUserName(string email, string name);
         void UpdateUserBio(string email, string bio);
-        string ChangeUserPassword(string email, string password);
-        void UserForgotPassword(string email);
+        string ChangePassword(string email, string password);
+        void ForgotPasswordRequest(string email);
         int GetUserGivenBookCount(int userId);
         IList<BookDTO> GetUserCurrentlyReadingBooks(int userId);
         IList<BookDTO> GetUserBooksOnHand(int userId);

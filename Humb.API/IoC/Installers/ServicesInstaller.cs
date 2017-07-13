@@ -9,6 +9,8 @@ using Humb.Core.Interfaces.ServiceInterfaces;
 using Humb.Service.Services;
 using Humb.Core.Interfaces.RepositoryInterfaces;
 using Humb.Data;
+using Humb.Core.Interfaces.ProviderInterfaces.EmailProviders;
+using Humb.Service.Providers;
 
 namespace Humb.API.IoC.Installers
 {
@@ -19,6 +21,8 @@ namespace Humb.API.IoC.Installers
             container.Register(Component.For<IUserService>().ImplementedBy<UserService>().LifestylePerWebRequest());
             container.Register(Component.For(typeof(IRepository<>)).ImplementedBy(typeof(Repository<>)).LifestylePerWebRequest());
             container.Register(Component.For<IDbContext>().ImplementedBy<EFDbContext>());
+            container.Register(Component.For<IEmailDispatcher>().ImplementedBy<SmtpEmailDispatcher>().LifeStyle.Singleton);
+            container.Register(Component.For<IEmailDispatcher>().ImplementedBy<SmtpEmailDispatcher>().LifeStyle.Singleton);
         }
     }
 }

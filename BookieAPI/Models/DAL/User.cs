@@ -18,15 +18,15 @@ namespace BookieAPI.Models.DAL
         [Key]
         public int userID { get; set; }
 
-        [Required]
+        [Required()]
         [StringLength(70)]
         public string nameSurname { get; set; }
 
-        [Required]
+        [Required()]
         [StringLength(320)]
         public string email { get; set; }
 
-        [Required]
+        [Required()]
         [StringLength(50)]
         public string password { get; set; }
 

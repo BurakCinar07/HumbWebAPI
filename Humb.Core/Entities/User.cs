@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+
 namespace Humb.Core.Entities
 {
     public partial class User : BaseEntity
@@ -12,11 +15,11 @@ namespace Humb.Core.Entities
             BookInteractions = new HashSet<BookInteraction>();
             LovedGenres = new HashSet<LovedGenre>();
         }
-        
+        [Required()]
         public string NameSurname { get; set; }
-        
+        [Required()]
         public string Email { get; set; }
-        
+        [Required()]
         public string Password { get; set; }
         
         public string ProfilePictureUrl { get; set; }

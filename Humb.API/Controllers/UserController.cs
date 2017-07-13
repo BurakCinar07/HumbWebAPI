@@ -41,7 +41,7 @@ namespace Humb.API.Controllers
         [HttpGet]
         public string ChangeUserPassword()
         {
-            return _userService.ChangeUserPassword("bab", "121334");
+            return _userService.ChangePassword("bab", "121334");
         }
 
     }

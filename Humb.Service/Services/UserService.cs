@@ -8,6 +8,9 @@ using Humb.Core.Entities;
 using Humb.Core.Interfaces.ServiceInterfaces;
 using Humb.Core.Interfaces.RepositoryInterfaces;
 using Humb.Service.Helpers;
+using Humb.Core.Interfaces.ProviderInterfaces.EmailProviders;
+using Humb.Service.Providers;
+
 namespace Humb.Service.Services
 {
     public class UserService : IUserService
@@ -15,16 +18,22 @@ namespace Humb.Service.Services
         private IRepository<User> _userRepository;
         private IRepository<BlockUser> _blockUserRepository;
         private IRepository<ForgottenPassword> _forgottenPasswordsRepository;
-        public UserService(IRepository<User> userRepo, IRepository<BlockUser> blockUserRepo, IRepository<ForgottenPassword> forgottenPasswordsRepo)
+        private IEmailDispatcher _emailDispatcher;
+        public UserService(IRepository<User> userRepo, IRepository<BlockUser> blockUserRepo, IRepository<ForgottenPassword> forgottenPasswordsRepo, IEmailDispatcher emailDispatcher)
         {
             this._userRepository = userRepo;
             this._blockUserRepository = blockUserRepo;
             this._forgottenPasswordsRepository = forgottenPasswordsRepo;
-
+            this._emailDispatcher = emailDispatcher;
         }
 
         public void CreateUser(string email, string password, string nameSurname)
         {
+            if (String.IsNullOrEmpty(email) || String.IsNullOrEmpty(nameSurname) || String.IsNullOrEmpty(password))
+                throw new ArgumentNullException("parameter is null");
+            if (UserExist(email, password))
+                throw new Exception();
+
             User user = new User()
             {
                 Email = email,
@@ -33,11 +42,13 @@ namespace Humb.Service.Services
                 CreatedAt = DateTime.Now,
                 EmailVerified = false,
                 VerificationHash = TextHelper.CalculateMD5Hash(new Random().Next(0, 1000).ToString()),
-            };
+            };           
             _userRepository.Insert(user);
         }
         public void BlockUser(int fromUserId, int toUserId)
         {
+            if (!UserExist(fromUserId) || !UserExist(toUserId))
+                throw new Exception();
             BlockUser blockedUsers = new BlockUser()
             {
                 FromUserId = fromUserId,
@@ -50,15 +61,28 @@ namespace Humb.Service.Services
         {
             return _userRepository.Count();
         }
-        public string ChangeUserPassword(string email, string newPassword)
+        public string ChangePassword(string email, string newPassword)
         {
+            if (String.IsNullOrEmpty(email) || String.IsNullOrEmpty(newPassword))
+                throw new ArgumentNullException("parameter is null");
             User user = GetUser(email);
             user.Password = TextHelper.CalculateMD5Hash(newPassword);
             _userRepository.Update(user, user.Id);
             return user.Password;
         }
+        public void ForgotPasswordRequest(string email)
+        {
+            User user = GetUser(email);
+            string newPassword = TextHelper.GenerateRandomPassword();
+            ForgottenPassword fp = _forgottenPasswordsRepository.FindSingleBy(x => x.Email == email);
+            if(fp != null)
+            {
+                _forgottenPasswordsRepository.Delete(fp);
+            }
+            _emailDispatcher.Dispatch(new VerificationEmailGenerator().Generate(user));
 
-        public void ConfirmPasswordChange(string email, string token)
+        }
+        public void ConfirmForgottenPasswordRequest(string email, string token)
         {
             ForgottenPassword fp = _forgottenPasswordsRepository.FindSingleBy(x => x.Email == email && x.Token == token);
             if (fp != null)
@@ -72,7 +96,6 @@ namespace Humb.Service.Services
                 _forgottenPasswordsRepository.Delete(fp);
             }
         }
-
         public bool DoesUserLocationExist(string email)
         {
             throw new NotImplementedException();
@@ -205,12 +228,9 @@ namespace Humb.Service.Services
 
         public bool UserExist(string email, string password)
         {
-            throw new NotImplementedException();
+            return _userRepository.GetAll().Any(x => x.Email == email && x.Password == password);
         }
 
-        public void UserForgotPassword(string email)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }
