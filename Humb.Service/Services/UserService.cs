@@ -79,7 +79,13 @@ namespace Humb.Service.Services
             {
                 _forgottenPasswordsRepository.Delete(fp);
             }
-            _emailDispatcher.Dispatch(new VerificationEmailGenerator().Generate(user));
+            fp = new ForgottenPassword();
+            fp.CreatedAt = DateTime.Now;
+            fp.Email = email;
+            fp.NewPassword = newPassword;
+            fp.Token = TextHelper.CalculateMD5Hash(new Random().Next(0, 1000).ToString());            
+            var forgottenPasswordEmailObject = new { user = user, fp = fp};
+            _emailDispatcher.Dispatch(new ForgottenPasswordEmailGenerator().Generate(forgottenPasswordEmailObject));
 
         }
         public void ConfirmForgottenPasswordRequest(string email, string token)

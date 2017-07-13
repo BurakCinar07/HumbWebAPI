@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Helpers\TextHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\ForgottenPasswordEmailGenerator.cs" />
     <Compile Include="Providers\VerificationEmailGenerator.cs" />
     <Compile Include="Providers\SmtpEmailDispatcher.cs" />
     <Compile Include="Services\UserService.cs" />

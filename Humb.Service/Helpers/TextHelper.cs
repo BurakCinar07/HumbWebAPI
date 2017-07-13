@@ -86,7 +86,7 @@ namespace Humb.Service.Helpers
         {
             Random rd = new Random();
 
-            const string allowedChars = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz0123456789";
+            const string allowedChars = "ABCDEFGHJKLMNOPQRSTUVWXYZ0123456789";
             char[] chars = new char[6];
 
             for (int i = 0; i < 6; i++)
