@@ -22,10 +22,12 @@ namespace Humb.Service.Providers
         {
             switch (val)
             {
-                case EmailEnums.TurkishForgotPasswordEmail :
+                case EmailEnums.TurkishForgotPasswordEmail:
                     _emailDispatcher.Dispatch(new EmailGenerator(new TurkishForgottenPasswordEmailContentGenerator(objs), objs[0].ToString()));
                     break;
-
+                case EmailEnums.TurkishVerificationEmail:
+                    _emailDispatcher.Dispatch(new EmailGenerator(new TurkishVerificationEmailContentGenerator(objs), objs[0].ToString()));
+                    break;
                 default:
                     break;
                     
