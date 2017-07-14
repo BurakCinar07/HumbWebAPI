@@ -18,12 +18,12 @@ namespace Humb.Service.Providers
                 SmtpClient client = new SmtpClient();
                 client.DeliveryMethod = SmtpDeliveryMethod.Network;
                 client.EnableSsl = false;
-                client.Host = "mail.mantreads.com";
+                client.Host = ConfigurationManager.AppSettings["SmtpServerHost"];
 
-                client.Port = 587;
+                client.Port = int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]);
                 // setup Smtp authentication
                 System.Net.NetworkCredential credentials =
-                    new System.Net.NetworkCredential("noreply@mantreads.com", "Burakasdf");
+                    new System.Net.NetworkCredential(ConfigurationManager.AppSettings["SmtpServerUserName"], ConfigurationManager.AppSettings["SmtpServerPassword"]);
                 client.UseDefaultCredentials = false;
                 client.Credentials = credentials;
                 client.Timeout = 1000;

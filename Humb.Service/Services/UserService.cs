@@ -86,7 +86,7 @@ namespace Humb.Service.Services
             fp.NewPassword = newPassword;
             fp.Token = TextHelper.CalculateMD5Hash(new Random().Next(0, 1000).ToString());
             object[] forgottenPasswordEmailObject = { user, fp };
-            _emailDispatcher.Dispatch(new ForgottenPasswordEmailGenerator(new TurkishForgottenPasswordEmailContentGenerator(forgottenPasswordEmailObject), user.Email));
+            _emailDispatcher.Dispatch(new EmailGenerator(new TurkishForgottenPasswordEmailContentGenerator(forgottenPasswordEmailObject), user.Email));
         }
         public void ConfirmForgottenPasswordRequest(string email, string token)
         {

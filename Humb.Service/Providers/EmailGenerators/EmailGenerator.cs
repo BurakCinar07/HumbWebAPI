@@ -10,19 +10,19 @@ using System.Configuration;
 
 namespace Humb.Service.Providers
 {
-    public class VerificationEmailGenerator : IEmailGenerator
+    public class EmailGenerator : IEmailGenerator
     {
         private readonly IEmailContentGenerator _emailContentGenerator;
         private readonly string _sendToEmailAddress;
-        public VerificationEmailGenerator(IEmailContentGenerator emailContentGenerator, string sendToEmailAddress)
+        public EmailGenerator(IEmailContentGenerator emailContentGenerator, string sendToEmailAddress)
         {
             this._emailContentGenerator = emailContentGenerator;
             this._sendToEmailAddress = sendToEmailAddress;
         }
         public MailMessage Generate()
-        {
+        {            
             MailMessage msg = _emailContentGenerator.GenerateEmailContent();
-            msg.From = new MailAddress("noreply@mantreads.com");
+            msg.From = new MailAddress(ConfigurationManager.AppSettings["SmtpMailAddress"]);
             msg.To.Add(new MailAddress(_sendToEmailAddress));
             return msg;
         }
