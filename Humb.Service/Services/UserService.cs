@@ -24,7 +24,7 @@ namespace Humb.Service.Services
         private readonly IRepository<ForgottenPassword> _forgottenPasswordsRepository;
         private readonly IRepository<BookTransaction> _bookTransactionRepository;
         private readonly IRepository<BookInteraction> _bookInteractionRepository;
-
+        private readonly IBookTransactionService _bookTransactionService;
         private IEmailFactory _emailFactory;
         public UserService(IRepository<User> userRepo, IRepository<Book> bookRepo, IRepository<BlockUser> blockUserRepo, IRepository<ForgottenPassword> forgottenPasswordsRepo,
             IRepository<BookTransaction> bookTransactionRepo, IRepository<BookInteraction> bookInteractionRepo, IEmailFactory emailFactory)
@@ -192,7 +192,7 @@ namespace Humb.Service.Services
 
             foreach (var bookTransaction in bookTransactions)
             {
-                BookTransaction transaction = BookTransactionService.GetLastBookTransaction(_bookTransactionRepository, bookTransaction.BookId);
+                BookTransaction transaction = _bookTransactionService.GetBookLastTransaction(bookTransaction.BookId);
                 if (transaction.TakerUserId == userId && transaction.TransactionType == ResponseConstant.TRANSACTION_DISPATCH)
                 {
                     //book = GetBookModel(lastTransaction.bookID);

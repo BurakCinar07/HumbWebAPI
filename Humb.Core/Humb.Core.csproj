@@ -77,6 +77,7 @@
     <Compile Include="Interfaces\RepositoryInterfaces\IRepository.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\IBookInteractionService.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\IBookService.cs" />
+    <Compile Include="Interfaces\ServiceInterfaces\IBookTransactionService.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\IFeedbackService.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\IInfiltratorService.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\ILovedGenreService.cs" />
