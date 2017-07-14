@@ -18,13 +18,14 @@ namespace Humb.Core.Interfaces.ServiceInterfaces
         int GetUserId(string email);
         User GetUser(string email);
         User GetUser(int userId);
-        string GetUserFcmToken(int userId);
+        UserDTO GetUserDTO(int userId);
+        string GetFcmToken(int userId);
         int GetUserBookCount(int userId);
         int GetUserProfilePoint(int userId);
         string GetUserProfilePictureUrl(string email);
         string GetUserProfilePictureThumbnailUrl(string email);
         bool IsUserVerified(string email);
-        bool DoesUserLocationExist(string email);
+        bool IsUserLocationExist(string email);
         bool IsUserBlocked(int fromUserId, int toUserId);
         void BlockUser(int fromUserId, int toUserId);
         void ConfirmForgottenPasswordRequest(string email, string token);

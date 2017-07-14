@@ -23,14 +23,14 @@ namespace Humb.Core.DTOs
         public string CreatedAt { get; set; }
         public UserDTO Owner { get; set; }
         public UserDTO AddedBy { get; set; }
-        public IList<BookInteraction> BookInteractions { get; set; }
-        public IList<BookRequest> BookRequests { get; set; }
-        public IList<BookTransaction> BookTransactions { get; set; }
+        public IList<BookInteractionDTO> BookInteractions { get; set; }
+        public IList<BookRequestDTO> BookRequests { get; set; }
+        public IList<BookTransactionDTO> BookTransactions { get; set; }
     }
 
-    public class BookTransaction
+    public class BookTransactionDTO
     {
-        public BookTransaction()
+        public BookTransactionDTO()
         {
             this.Giver = new UserDTO();
             this.Taker = new UserDTO();
@@ -41,9 +41,9 @@ namespace Humb.Core.DTOs
         public string CreatedAt { get; set; }
     }
 
-    public class BookRequest
+    public class BookRequestDTO
     {
-        public BookRequest()
+        public BookRequestDTO()
         {
             this.Requester = new UserDTO();
             this.Responder = new UserDTO();
@@ -54,9 +54,9 @@ namespace Humb.Core.DTOs
         public string CreatedAt { get; set; }
     }
 
-    public class BookInteraction
+    public class BookInteractionDTO
     {
-        public BookInteraction()
+        public BookInteractionDTO()
         {
             this.User = new UserDTO();
         }

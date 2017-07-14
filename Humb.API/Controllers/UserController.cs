@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Results;
 using Humb.Core.Interfaces.ServiceInterfaces;
+using Humb.Core.DTOs;
 
 namespace Humb.API.Controllers
 {
@@ -14,7 +15,7 @@ namespace Humb.API.Controllers
     {
         private readonly IUserService _userService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService) 
         {
             if (userService == null)
                 throw new ArgumentNullException("userService is null");
@@ -42,6 +43,11 @@ namespace Humb.API.Controllers
         public string ChangeUserPassword()
         {
             return _userService.ChangePassword("bab", "121334");
+        }
+        [HttpGet]
+        public IList<BookDTO> GetUserBooksOnHand()
+        {
+            return _userService.GetUserBooksOnHand(2);
         }
 
     }

@@ -22,7 +22,6 @@ namespace Humb.API.IoC.Installers
             container.Register(Component.For(typeof(IRepository<>)).ImplementedBy(typeof(Repository<>)).LifestylePerWebRequest());
             container.Register(Component.For<IDbContext>().ImplementedBy<EFDbContext>());
             container.Register(Component.For<IEmailDispatcher>().ImplementedBy<SmtpEmailDispatcher>().LifeStyle.Singleton);
-            container.Register(Component.For<IEmailDispatcher>().ImplementedBy<SmtpEmailDispatcher>().LifeStyle.Singleton);
         }
     }
 }

@@ -36,6 +36,9 @@
     <Reference Include="Moq, Version=4.7.63.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\packages\Moq.4.7.63\lib\net45\Moq.dll</HintPath>
     </Reference>
+    <Reference Include="Pelusoft.EasyMapper, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EasyMapper.1.0.2\lib\net45\Pelusoft.EasyMapper.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -53,6 +56,7 @@
     <Compile Include="Providers\EmailContentGenerators\TurkishVerificationEmailContentGenerator.cs" />
     <Compile Include="Providers\EmailGenerators\EmailGenerator.cs" />
     <Compile Include="Providers\SmtpEmailDispatcher.cs" />
+    <Compile Include="Services\BookTransactionService.cs" />
     <Compile Include="Services\UserService.cs" />
   </ItemGroup>
   <ItemGroup>
