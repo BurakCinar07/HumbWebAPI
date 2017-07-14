@@ -25,9 +25,9 @@ namespace Humb.Service.Services
         private readonly IRepository<BookTransaction> _bookTransactionRepository;
         private readonly IRepository<BookInteraction> _bookInteractionRepository;
 
-        private IEmailDispatcher _emailDispatcher;
+        private IEmailFactory _emailFactory;
         public UserService(IRepository<User> userRepo, IRepository<Book> bookRepo, IRepository<BlockUser> blockUserRepo, IRepository<ForgottenPassword> forgottenPasswordsRepo,
-            IRepository<BookTransaction> bookTransactionRepo, IRepository<BookInteraction> bookInteractionRepo, IEmailDispatcher emailDispatcher)
+            IRepository<BookTransaction> bookTransactionRepo, IRepository<BookInteraction> bookInteractionRepo, IEmailFactory emailFactory)
         {
             this._userRepository = userRepo;
             this._bookRepository = bookRepo;
@@ -35,7 +35,7 @@ namespace Humb.Service.Services
             this._forgottenPasswordsRepository = forgottenPasswordsRepo;
             this._bookTransactionRepository = bookTransactionRepo;
             this._bookInteractionRepository = bookInteractionRepo;
-            this._emailDispatcher = emailDispatcher;
+            this._emailFactory = emailFactory;
         }
 
         public void CreateUser(string email, string password, string nameSurname)
@@ -84,7 +84,6 @@ namespace Humb.Service.Services
         public void ForgotPasswordRequest(string email)
         {
             User user = GetUser(email);
-            string newPassword = TextHelper.GenerateRandomPassword();
             ForgottenPassword fp = _forgottenPasswordsRepository.FindSingleBy(x => x.Email == email);
             if (fp != null)
             {
@@ -93,10 +92,11 @@ namespace Humb.Service.Services
             fp = new ForgottenPassword();
             fp.CreatedAt = DateTime.Now;
             fp.Email = email;
-            fp.NewPassword = newPassword;
+            fp.NewPassword = TextHelper.GenerateRandomPassword();
             fp.Token = TextHelper.CalculateMD5Hash(new Random().Next(0, 1000).ToString());
-            object[] forgottenPasswordEmailObject = { user, fp };
-            _emailDispatcher.Dispatch(new EmailGenerator(new TurkishForgottenPasswordEmailContentGenerator(forgottenPasswordEmailObject), user.Email));
+            object[] forgottenPasswordEmailObject = {user.Email, user.NameSurname, fp.NewPassword, fp.Token};
+            _emailFactory.Initialize(EmailEnums.TurkishForgotPasswordEmail, forgottenPasswordEmailObject);
+            _forgottenPasswordsRepository.Insert(fp);
         }
         public void ConfirmForgottenPasswordRequest(string email, string token)
         {
@@ -309,7 +309,7 @@ namespace Humb.Service.Services
             return _userRepository.GetAll().Any(x => x.Email == email && x.Password == password);
         }
 
-        
+
 
     }
 }

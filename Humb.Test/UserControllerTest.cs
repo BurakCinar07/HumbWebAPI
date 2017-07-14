@@ -60,7 +60,7 @@ namespace Humb.Test
             _bookTransactionRepository = mockTransactions.Object;
             Mock<IRepository<Book>> mockBook = new Mock<IRepository<Book>>();
             _bookRepository = mockBook.Object;
-            us = new UserService(mockUser.Object, _bookRepository, mockBlock.Object, mockPassword.Object, _bookTransactionRepository, _bookInteractionRepository, new SmtpEmailDispatcher());
+            us = new UserService(mockUser.Object, _bookRepository, mockBlock.Object, mockPassword.Object, _bookTransactionRepository, _bookInteractionRepository, new EmailFactory(new SmtpEmailDispatcher()));
         }
         //[Test]
         public void ValueNullTest()
@@ -95,12 +95,12 @@ namespace Humb.Test
 
             }
         }
-        
+        [Test]        
         public void IsVerificationEmailSend()
         {
             us.ForgotPasswordRequest("burakcinar07@gmail.com");
         }
-        [Test]
+        //[Test]
         public void TransformDTO()
         {
             var x = us.GetFcmToken(4);

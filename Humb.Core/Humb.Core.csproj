@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseEntity.cs" />
+    <Compile Include="Constants\EmailEnums.cs" />
     <Compile Include="Constants\InfiltratorConstant.cs" />
     <Compile Include="Constants\ResponseConstant.cs" />
     <Compile Include="DTOs\BookDetailsDTO.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Entities\User.cs" />
     <Compile Include="Interfaces\ProviderInterfaces\EmailProviders\IEmailContentGenerator.cs" />
     <Compile Include="Interfaces\ProviderInterfaces\EmailProviders\IEmailDispatcher.cs" />
+    <Compile Include="Interfaces\ProviderInterfaces\EmailProviders\IEmailFactory.cs" />
     <Compile Include="Interfaces\ProviderInterfaces\EmailProviders\IEmailGenerator.cs" />
     <Compile Include="Interfaces\RepositoryInterfaces\IRepository.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\IBookInteractionService.cs" />
