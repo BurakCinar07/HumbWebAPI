@@ -49,8 +49,10 @@
   <ItemGroup>
     <Compile Include="Helpers\TextHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Providers\ForgottenPasswordEmailGenerator.cs" />
-    <Compile Include="Providers\VerificationEmailGenerator.cs" />
+    <Compile Include="Providers\EmailContentGenerators\TurkishForgottenPasswordEmailContentGenerator.cs" />
+    <Compile Include="Providers\EmailContentGenerators\TurkishVerificationEmailContentGenerator.cs" />
+    <Compile Include="Providers\EmailGenerators\ForgottenPasswordEmailGenerator.cs" />
+    <Compile Include="Providers\EmailGenerators\VerificationEmailGenerator.cs" />
     <Compile Include="Providers\SmtpEmailDispatcher.cs" />
     <Compile Include="Services\UserService.cs" />
   </ItemGroup>
@@ -68,5 +70,6 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

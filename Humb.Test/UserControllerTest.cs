@@ -25,6 +25,7 @@ namespace Humb.Test
         private IUserService us;
         List<User> users;
         [SetUp]
+        
         public void Initialize()
         {
             users = new List<User>{
@@ -50,7 +51,7 @@ namespace Humb.Test
             _passwordRepository = mockPassword.Object;
             us = new UserService(mockUser.Object, mockBlock.Object, mockPassword.Object, new SmtpEmailDispatcher());
         }
-        [Test]
+        //[Test]
         public void ValueNullTest()
         {
             try
@@ -62,14 +63,14 @@ namespace Humb.Test
                 Assert.AreEqual(typeof(ArgumentNullException), e.GetType());
             }
         }
-        [Test]
+        //[Test]
         public void GetTotalUserCountTest()
         {
             Assert.AreEqual(4, us.GetTotalUserCount());
         }
-        [TestCase("burak", "1")]
-        [TestCase("", "")]        
-        [TestCase("qwert", "1")]
+        //[TestCase("burak", "1")]
+        //[TestCase("", "")]        
+        //[TestCase("qwert", "1")]
         public void ChangeUserPasswordTest(string email, string pass)
         {
             try

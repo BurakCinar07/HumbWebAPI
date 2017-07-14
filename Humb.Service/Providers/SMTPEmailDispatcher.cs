@@ -10,8 +10,8 @@ using System.Configuration;
 namespace Humb.Service.Providers
 {
     public class SmtpEmailDispatcher : IEmailDispatcher
-    {
-        public void Dispatch(MailMessage mailMessage)
+    {        
+        public void Dispatch(IEmailGenerator emailGenerator)
         {
             try
             {
@@ -28,7 +28,7 @@ namespace Humb.Service.Providers
                 client.Credentials = credentials;
                 client.Timeout = 1000;
 
-                client.Send(mailMessage);
+                client.Send(emailGenerator.Generate());
             }
             catch(Exception e)
             {

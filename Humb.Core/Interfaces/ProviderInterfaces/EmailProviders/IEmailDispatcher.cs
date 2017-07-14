@@ -9,6 +9,6 @@ namespace Humb.Core.Interfaces.ProviderInterfaces.EmailProviders
 {
     public interface IEmailDispatcher
     {
-        void Dispatch(MailMessage mailMessage);
+        void Dispatch(IEmailGenerator emailGenerator);
     }
 }

@@ -66,6 +66,7 @@
     <Compile Include="Entities\ReportBook.cs" />
     <Compile Include="Entities\ReportUser.cs" />
     <Compile Include="Entities\User.cs" />
+    <Compile Include="Interfaces\ProviderInterfaces\EmailProviders\IEmailContentGenerator.cs" />
     <Compile Include="Interfaces\ProviderInterfaces\EmailProviders\IEmailDispatcher.cs" />
     <Compile Include="Interfaces\ProviderInterfaces\EmailProviders\IEmailGenerator.cs" />
     <Compile Include="Interfaces\RepositoryInterfaces\IRepository.cs" />

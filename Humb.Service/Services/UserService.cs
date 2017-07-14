@@ -10,6 +10,7 @@ using Humb.Core.Interfaces.RepositoryInterfaces;
 using Humb.Service.Helpers;
 using Humb.Core.Interfaces.ProviderInterfaces.EmailProviders;
 using Humb.Service.Providers;
+using Humb.Service.Providers.EmailContentGenerators;
 
 namespace Humb.Service.Services
 {
@@ -83,10 +84,9 @@ namespace Humb.Service.Services
             fp.CreatedAt = DateTime.Now;
             fp.Email = email;
             fp.NewPassword = newPassword;
-            fp.Token = TextHelper.CalculateMD5Hash(new Random().Next(0, 1000).ToString());            
-            var forgottenPasswordEmailObject = new { user = user, fp = fp};
-            _emailDispatcher.Dispatch(new ForgottenPasswordEmailGenerator().Generate(forgottenPasswordEmailObject));
-
+            fp.Token = TextHelper.CalculateMD5Hash(new Random().Next(0, 1000).ToString());
+            object[] forgottenPasswordEmailObject = { user, fp };
+            _emailDispatcher.Dispatch(new ForgottenPasswordEmailGenerator(new TurkishForgottenPasswordEmailContentGenerator(forgottenPasswordEmailObject), user.Email));
         }
         public void ConfirmForgottenPasswordRequest(string email, string token)
         {
