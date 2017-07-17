@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Humb.Core.DTOs;
+using Pelusoft.EasyMapper;
 
 namespace Humb.Service.Services
 {
@@ -31,17 +32,26 @@ namespace Humb.Service.Services
 
         public BookTransaction GetBookLastTransaction(int bookId)
         {
-            throw new NotImplementedException();
+            return _bookTransactionRepository.FindBy(x => x.BookId == bookId).OrderByDescending(x => x.CreatedAt).FirstOrDefault();
         }
 
-        public List<BookTransactionDTO> GetBookTransactions(int bookId)
+        public IList<BookTransaction> GetBookTransactions(int bookId)
         {
-            throw new NotImplementedException();
+            return _bookTransactionRepository.FindBy(x => x.BookId == bookId).ToList();
         }
-
+        public IList<BookTransactionDTO> GetBookTransactionDTOs(int bookId)
+        {
+            List<BookTransactionDTO> bookTransactionDTOs = new List<BookTransactionDTO>();
+            var bookTransactions = _bookTransactionRepository.FindBy(x => x.BookId == bookId);
+            foreach(var bt in bookTransactions)
+            {
+                EasyMapper.Map<BookTransactionDTO>(bt);
+            }
+            return bookTransactionDTOs;
+        }
         public int GetUserTakenBookTransactionCount(int takerUserId, int bookId, int transactionType)
         {
-            throw new NotImplementedException();
+            return _bookTransactionRepository.FindBy(x => x.TakerUserId == takerUserId && x.BookId == bookId && x.TransactionType == transactionType).Count();
         }
     }
 }

@@ -11,7 +11,8 @@ namespace Humb.Core.Interfaces.ServiceInterfaces
     public interface IBookTransactionService
     {
         void AddTransaction(int bookID, int giverUserId, int takerUserId, Book book, int transactionType);
-        List<BookTransactionDTO> GetBookTransactions(int bookId);
+        IList<BookTransaction> GetBookTransactions(int bookId);
+        IList<BookTransactionDTO> GetBookTransactionDTOs(int bookId);
         BookTransaction GetBookLastTransaction(int bookId);
         int GetUserTakenBookTransactionCount(int takerUserId, int bookId, int transactionType);
     }

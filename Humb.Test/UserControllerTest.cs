@@ -11,7 +11,8 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Moq.Language.Flow;
 using NUnit.Framework;
-using Humb.Service.Providers;
+using Humb.Service.Services.EmailService.EmailDispatchers;
+using Humb.Service.Services.EmailService;
 
 namespace Humb.Test
 {
