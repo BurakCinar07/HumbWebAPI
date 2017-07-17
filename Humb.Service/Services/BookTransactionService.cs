@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Humb.Core.DTOs;
 using Pelusoft.EasyMapper;
+using Humb.Core.Constants;
 
 namespace Humb.Service.Services
 {
@@ -21,12 +22,14 @@ namespace Humb.Service.Services
 
         public void AddTransaction(int bookID, int giverUserId, int takerUserId, Book book, int transactionType)
         {
-            BookTransaction bookTransaction = new BookTransaction();
-            bookTransaction.GiverUserId = giverUserId;
-            bookTransaction.TakerUserId = takerUserId;
-            bookTransaction.Book = book;
-            bookTransaction.TransactionType = transactionType;
-            bookTransaction.CreatedAt = DateTime.Now.AddMilliseconds(20);
+            BookTransaction bookTransaction = new BookTransaction()
+            {
+                GiverUserId = giverUserId,
+                TakerUserId = takerUserId,
+                Book = book,
+                TransactionType = transactionType,
+                CreatedAt = DateTime.Now.AddMilliseconds(20)
+            };
             _bookTransactionRepository.Insert(bookTransaction);
         }
 
@@ -43,7 +46,7 @@ namespace Humb.Service.Services
         {
             List<BookTransactionDTO> bookTransactionDTOs = new List<BookTransactionDTO>();
             var bookTransactions = _bookTransactionRepository.FindBy(x => x.BookId == bookId);
-            foreach(var bt in bookTransactions)
+            foreach (var bt in bookTransactions)
             {
                 EasyMapper.Map<BookTransactionDTO>(bt);
             }
@@ -52,6 +55,14 @@ namespace Humb.Service.Services
         public int GetUserTakenBookTransactionCount(int takerUserId, int bookId, int transactionType)
         {
             return _bookTransactionRepository.FindBy(x => x.TakerUserId == takerUserId && x.BookId == bookId && x.TransactionType == transactionType).Count();
+        }
+        public int GetTakerUserTransactionCount(int takerUserId, int transactionType)
+        {
+            return _bookTransactionRepository.FindBy(x => x.TransactionType == transactionType && x.TakerUserId == takerUserId).Count();
+        }
+        public int GetGiverUserTransactionCount(int giverUserId, int transactionType)
+        {
+            return _bookTransactionRepository.FindBy(x => x.TransactionType == transactionType && x.GiverUserId == giverUserId).Count();
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Humb.Core.Interfaces.ServiceInterfaces
         User GetUser(int userId);
         UserDTO GetUserDTO(int userId);
         string GetFcmToken(int userId);
-        int GetUserBookCount(int userId);
+        int GetUserBookCounter(int userId);
         int GetUserProfilePoint(int userId);
         string GetUserProfilePictureUrl(string email);
         string GetUserProfilePictureThumbnailUrl(string email);
@@ -40,7 +40,6 @@ namespace Humb.Core.Interfaces.ServiceInterfaces
         string ChangePassword(string email, string password);
         void ForgotPasswordRequest(string email);
         int GetUserGivenBookCount(int userId);
-        IList<BookDTO> GetUserCurrentlyReadingBooks(int userId);
         IList<BookDTO> GetUserBooksOnHand(int userId);
         IList<BookDTO> GetUserReadBooks(int userId);
         IList<BookDTO> GetUserOnRoadBooks(int userId);

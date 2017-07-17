@@ -61,7 +61,7 @@ namespace Humb.Test
             _bookTransactionRepository = mockTransactions.Object;
             Mock<IRepository<Book>> mockBook = new Mock<IRepository<Book>>();
             _bookRepository = mockBook.Object;
-            us = new UserService(mockUser.Object, _bookRepository, mockBlock.Object, mockPassword.Object, _bookTransactionRepository, _bookInteractionRepository, new EmailFactory(new SmtpEmailDispatcher()));
+           // us = new UserService(mockUser.Object, _bookRepository, mockBlock.Object, mockPassword.Object, _bookTransactionRepository, _bookInteractionRepository, new EmailFactory(new SmtpEmailDispatcher()));
         }
         //[Test]
         public void ValueNullTest()

@@ -15,5 +15,7 @@ namespace Humb.Core.Interfaces.ServiceInterfaces
         IList<BookTransactionDTO> GetBookTransactionDTOs(int bookId);
         BookTransaction GetBookLastTransaction(int bookId);
         int GetUserTakenBookTransactionCount(int takerUserId, int bookId, int transactionType);
+        int GetTakerUserTransactionCount(int takerUserId, int transactionType);
+        int GetGiverUserTransactionCount(int giverUserId, int transactionType);
     }
 }

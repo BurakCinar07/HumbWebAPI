@@ -17,22 +17,23 @@ namespace Humb.Service.Services
     public class UserService : IUserService
     {
         private readonly IRepository<User> _userRepository;
-        private readonly IRepository<Book> _bookRepository;
         private readonly IRepository<BlockUser> _blockUserRepository;
         private readonly IRepository<ForgottenPassword> _forgottenPasswordsRepository;
         private readonly IRepository<BookTransaction> _bookTransactionRepository;
         private readonly IRepository<BookInteraction> _bookInteractionRepository;
         private readonly IBookTransactionService _bookTransactionService;
+        private readonly IBookService _bookService;
         private IEmailFactory _emailFactory;
-        public UserService(IRepository<User> userRepo, IRepository<Book> bookRepo, IRepository<BlockUser> blockUserRepo, IRepository<ForgottenPassword> forgottenPasswordsRepo,
-            IRepository<BookTransaction> bookTransactionRepo, IRepository<BookInteraction> bookInteractionRepo, IEmailFactory emailFactory)
+        public UserService(IBookTransactionService bookTransactionService, IBookService bookService, IRepository<User> userRepo, IRepository<Book> bookRepo, IRepository<BlockUser> blockUserRepo, IRepository<ForgottenPassword> forgottenPasswordsRepo
+            , IRepository<BookInteraction> bookInteractionRepo, IEmailFactory emailFactory)
         {
+            this._bookTransactionService = bookTransactionService;
+            this._bookService = bookService;
             this._userRepository = userRepo;
-            this._bookRepository = bookRepo;
             this._blockUserRepository = blockUserRepo;
             this._forgottenPasswordsRepository = forgottenPasswordsRepo;
-            this._bookTransactionRepository = bookTransactionRepo;
             this._bookInteractionRepository = bookInteractionRepo;
+
             this._emailFactory = emailFactory;
         }
 
@@ -138,14 +139,14 @@ namespace Humb.Service.Services
         {
             return EasyMapper.Map<UserDTO>(GetUser(userId));
         }
-        public int GetUserBookCount(int userId)
+        public int GetUserBookCounter(int userId)
         {
             int counter = 100;
-            counter += _bookTransactionRepository.FindBy(x => x.TransactionType == ResponseConstant.TRANSACTION_DISPATCH && x.GiverUserId == userId).Count();
-            counter -= _bookTransactionRepository.FindBy(x => x.TransactionType == ResponseConstant.TRANSACTION_DISPATCH && x.TakerUserId == userId).Count();
+            counter += _bookTransactionService.GetGiverUserTransactionCount(userId, ResponseConstant.TRANSACTION_DISPATCH);
+            counter -= _bookTransactionService.GetTakerUserTransactionCount(userId, ResponseConstant.TRANSACTION_DISPATCH);
 
             //Dispatch olduğunda puan direk artırıldığı için kitabı kaybeden giverdan önce verilen puan alınır ardından bir puan daha düşürülür, takerdan puan dispatchte düşürüldüğü için puanına dokunulmaz.
-            counter -= 2 * _bookTransactionRepository.FindBy(x => x.TransactionType == ResponseConstant.TRANSACTION_LOST && x.GiverUserId == userId).Count();
+            counter -= 2 * _bookTransactionService.GetGiverUserTransactionCount(userId, ResponseConstant.TRANSACTION_LOST);
             return counter;
         }
 
@@ -165,19 +166,7 @@ namespace Humb.Service.Services
             return books;
         }
 
-        public IList<BookDTO> GetUserCurrentlyReadingBooks(int userId)
-        {
-            List<BookDTO> books = new List<BookDTO>();
-
-            var booksCurrentlyReading = _bookRepository.FindBy(x => x.BookState == ResponseConstant.STATE_READING && x.OwnerId == userId).
-                Select(i => new { i.Id, i.BookName, i.BookPictureUrl, i.BookPictureThumbnailUrl, i.Author, i.BookState, i.GenreCode });
-
-            foreach (var book in booksCurrentlyReading)
-            {
-                books.Add(EasyMapper.Map<BookDTO>(book));
-            }
-            return books;
-        }
+        
         public IList<BookDTO> GetUserOnRoadBooks(int userId)
         {
             List<BookDTO> books = new List<BookDTO>();
@@ -223,7 +212,7 @@ namespace Humb.Service.Services
 
         public int GetUserGivenBookCount(int userId)
         {
-            return _bookTransactionRepository.FindBy(x => x.GiverUserId == userId && x.TransactionType == ResponseConstant.TRANSACTION_COME_TO_HAND).Count();
+            return _bookTransactionService.GetGiverUserTransactionCount(userId, ResponseConstant.TRANSACTION_COME_TO_HAND);
         }
 
         public int GetUserId(string email)
@@ -233,12 +222,12 @@ namespace Humb.Service.Services
 
         public string GetUserProfilePictureThumbnailUrl(string email)
         {
-            throw new NotImplementedException();
+            return _userRepository.FindSingleBy(x => x.Email == email).ProfilePictureThumbnailUrl;
         }
 
         public string GetUserProfilePictureUrl(string email)
         {
-            throw new NotImplementedException();
+            return _userRepository.FindSingleBy(x => x.Email == email).ProfilePictureUrl;
         }
 
         public int GetUserProfilePoint(int userId)
@@ -299,7 +288,7 @@ namespace Humb.Service.Services
 
         public bool UserExist(int userId)
         {
-            throw new NotImplementedException();
+            return _userRepository.GetAll().Any(x => x.Id == userId);
         }
 
         public bool UserExist(string email, string password)
