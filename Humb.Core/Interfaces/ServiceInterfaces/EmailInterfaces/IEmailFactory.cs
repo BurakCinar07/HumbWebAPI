@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Humb.Core.Interfaces.ProviderInterfaces.EmailProviders
+namespace Humb.Core.Interfaces.ServiceInterfaces.EmailInterfaces
 {
     public interface IEmailFactory
     {

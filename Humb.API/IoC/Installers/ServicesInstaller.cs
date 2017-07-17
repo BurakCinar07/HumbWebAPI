@@ -9,8 +9,9 @@ using Humb.Core.Interfaces.ServiceInterfaces;
 using Humb.Service.Services;
 using Humb.Core.Interfaces.RepositoryInterfaces;
 using Humb.Data;
-using Humb.Core.Interfaces.ProviderInterfaces.EmailProviders;
-using Humb.Service.Providers;
+using Humb.Service.Services.EmailService.EmailDispatchers;
+using Humb.Core.Interfaces.ServiceInterfaces.EmailInterfaces;
+using Humb.Service.Services.EmailService;
 
 namespace Humb.API.IoC.Installers
 {

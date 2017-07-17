@@ -6,7 +6,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Humb.Core.Interfaces.ProviderInterfaces.EmailProviders
+namespace Humb.Core.Interfaces.ServiceInterfaces.EmailInterfaces
 {
     public interface IEmailGenerator 
     {

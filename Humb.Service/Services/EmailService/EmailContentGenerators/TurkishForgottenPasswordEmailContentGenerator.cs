@@ -1,5 +1,5 @@
 ﻿using Humb.Core.Entities;
-using Humb.Core.Interfaces.ProviderInterfaces.EmailProviders;
+using Humb.Core.Interfaces.ServiceInterfaces.EmailInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Humb.Service.Providers.EmailContentGenerators
+namespace Humb.Service.Services.EmailService.EmailContentGenerators
 {
     public class TurkishForgottenPasswordEmailContentGenerator : IEmailContentGenerator
     {

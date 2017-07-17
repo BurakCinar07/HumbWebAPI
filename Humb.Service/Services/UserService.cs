@@ -8,11 +8,9 @@ using Humb.Core.Entities;
 using Humb.Core.Interfaces.ServiceInterfaces;
 using Humb.Core.Interfaces.RepositoryInterfaces;
 using Humb.Service.Helpers;
-using Humb.Core.Interfaces.ProviderInterfaces.EmailProviders;
-using Humb.Service.Providers;
-using Humb.Service.Providers.EmailContentGenerators;
 using Humb.Core.Constants;
 using Pelusoft.EasyMapper;
+using Humb.Core.Interfaces.ServiceInterfaces.EmailInterfaces;
 
 namespace Humb.Service.Services
 {

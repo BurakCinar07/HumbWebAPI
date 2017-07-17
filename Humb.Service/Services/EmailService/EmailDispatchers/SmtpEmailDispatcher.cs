@@ -1,13 +1,13 @@
-﻿using Humb.Core.Interfaces.ProviderInterfaces.EmailProviders;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Mail;
 using System.Configuration;
+using Humb.Core.Interfaces.ServiceInterfaces.EmailInterfaces;
 
-namespace Humb.Service.Providers
+namespace Humb.Service.Services.EmailService.EmailDispatchers
 {
     public class SmtpEmailDispatcher : IEmailDispatcher
     {        

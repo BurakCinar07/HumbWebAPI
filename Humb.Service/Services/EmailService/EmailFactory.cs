@@ -1,14 +1,15 @@
-﻿using Humb.Core.Interfaces.ProviderInterfaces.EmailProviders;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Humb.Core.Constants;
 using Humb.Core.Entities;
-using Humb.Service.Providers.EmailContentGenerators;
+using Humb.Service.Services.EmailService.EmailGenerators;
+using Humb.Service.Services.EmailService.EmailContentGenerators;
+using Humb.Core.Interfaces.ServiceInterfaces.EmailInterfaces;
 
-namespace Humb.Service.Providers
+namespace Humb.Service.Services.EmailService
 {
     public class EmailFactory : IEmailFactory
     {

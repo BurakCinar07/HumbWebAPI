@@ -70,10 +70,10 @@
     <Compile Include="Entities\ReportBook.cs" />
     <Compile Include="Entities\ReportUser.cs" />
     <Compile Include="Entities\User.cs" />
-    <Compile Include="Interfaces\ProviderInterfaces\EmailProviders\IEmailContentGenerator.cs" />
-    <Compile Include="Interfaces\ProviderInterfaces\EmailProviders\IEmailDispatcher.cs" />
-    <Compile Include="Interfaces\ProviderInterfaces\EmailProviders\IEmailFactory.cs" />
-    <Compile Include="Interfaces\ProviderInterfaces\EmailProviders\IEmailGenerator.cs" />
+    <Compile Include="Interfaces\ServiceInterfaces\EmailInterfaces\IEmailContentGenerator.cs" />
+    <Compile Include="Interfaces\ServiceInterfaces\EmailInterfaces\IEmailDispatcher.cs" />
+    <Compile Include="Interfaces\ServiceInterfaces\EmailInterfaces\IEmailFactory.cs" />
+    <Compile Include="Interfaces\ServiceInterfaces\EmailInterfaces\IEmailGenerator.cs" />
     <Compile Include="Interfaces\RepositoryInterfaces\IRepository.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\IBookInteractionService.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\IBookService.cs" />

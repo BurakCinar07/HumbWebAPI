@@ -1,5 +1,4 @@
-﻿using Humb.Core.Interfaces.ProviderInterfaces.EmailProviders;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,8 +6,9 @@ using System.Threading.Tasks;
 using System.Net.Mail;
 using Humb.Core.Entities;
 using System.Configuration;
+using Humb.Core.Interfaces.ServiceInterfaces.EmailInterfaces;
 
-namespace Humb.Service.Providers
+namespace Humb.Service.Services.EmailService.EmailGenerators
 {
     public class EmailGenerator : IEmailGenerator
     {
