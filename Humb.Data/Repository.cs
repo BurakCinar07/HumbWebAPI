@@ -121,5 +121,9 @@ namespace Humb.Data
             _context.SaveChanges();
         }
 
+        public bool Any(Expression<Func<T, bool>> match)
+        {
+            return Entities.Any(match);
+        }
     }
 }

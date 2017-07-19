@@ -113,7 +113,7 @@ namespace Humb.Service.Services
         }
         public bool IsUserLocationExist(string email)
         {
-            return _userRepository.GetAll().Any(x => x.Email == email && (x.Latitude != null && x.Longitude != null));
+            return _userRepository.Any(x => x.Email == email && (x.Latitude != null && x.Longitude != null));
         }
 
         public double GetDistanceBetweenTwoUsers(double lat1, double lat2, double lon1, double lon2)
@@ -219,7 +219,11 @@ namespace Humb.Service.Services
         {
             return _userRepository.FindSingleBy(x => x.Email == email).Id;
         }
-
+        public User GetBookOwner(int bookId)
+        {
+            int ownerId = _bookService.GetBookOwnerId(bookId);
+            return _userRepository.FindSingleBy(x => x.Id == ownerId);
+        }
         public string GetUserProfilePictureThumbnailUrl(string email)
         {
             return _userRepository.FindSingleBy(x => x.Email == email).ProfilePictureThumbnailUrl;
@@ -288,12 +292,12 @@ namespace Humb.Service.Services
 
         public bool UserExist(int userId)
         {
-            return _userRepository.GetAll().Any(x => x.Id == userId);
+            return _userRepository.Any(x => x.Id == userId);
         }
 
         public bool UserExist(string email, string password)
         {
-            return _userRepository.GetAll().Any(x => x.Email == email && x.Password == password);
+            return _userRepository.Any(x => x.Email == email && x.Password == password);
         }
 
 

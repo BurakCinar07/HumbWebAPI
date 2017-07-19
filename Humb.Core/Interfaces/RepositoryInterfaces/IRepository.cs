@@ -20,6 +20,7 @@ namespace Humb.Core.Interfaces.RepositoryInterfaces
         Task<T> FindSingleByAsync(Expression<Func<T, bool>> match);
         IQueryable<T> FindBy(Expression<Func<T, bool>> match);
         Task<ICollection<T>> FindByAsync(Expression<Func<T, bool>> match);
+        bool Any(Expression<Func<T, bool>> match);
         int Count();
         void Save();
     }

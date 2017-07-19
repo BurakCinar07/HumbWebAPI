@@ -11,21 +11,20 @@ namespace Humb.Core.Interfaces.ServiceInterfaces
     public interface IBookService
     {
         int CreateBook(string email, string path, string thumbnailPath, string bookName, string author, int bookState, int genreCode);
-        Book GetBook(int ID);
-        bool BookAddedByUser(int bookID, int userID);
-        int GetBookState(int bookID);
-        string GetBookPictureUrl(int bookID);
-        string GetBookPictureThumbnailURL(int bookID);
-        void UpdateBookState(int bookID, int state);
-        string[] UpdateBookPicture(string picturePath, string thumbnailPath, int bookID);
-        void UpdateBookOwner(int bookID, int userID);
-        void UpdateBookDetails(int bookID, string bookName, string author, int genreCode);
-        bool DoesBookOwnerExist(int bookID, int userID);
-        void ReportBook(int userID, int bookID, int reportCode, string reportInfo);
+        Book GetBook(int Id);
+        bool IsBookAddedByUser(int bookId, int userId);
+        int GetBookState(int bookId);
+        string GetBookPictureUrl(int bookId);
+        string GetBookPictureThumbnailURL(int bookId);
+        void UpdateBookState(int bookId, int state);
+        string[] UpdateBookPicture(string picturePath, string thumbnailPath, int bookId);
+        void UpdateBookOwner(int bookId, int userId);
+        void UpdateBookDetails(int bookId, string bookName, string author, int genreCode);
+        bool IsUserBookOwner(int bookId, int userId);
+        void ReportBook(int userId, int bookId, int reportCode, string reportInfo);
         IList<BookDTO> GetBookDTOByGenre(int genreCode, string email, bool searchPressed);
-        User GetBookOwner(int bookID);
-        bool SetBookStateLost(string email, int bookID);
-        int GetBookPopularity(string bookName, DateTime dateTime);
+        int GetBookOwnerId(int bookId);
+        bool SetBookStateLost(string email, int bookId);
         IList<Book> GetBooksByLovedGenres(ICollection<LovedGenre> lovedGenres);
 
     }
