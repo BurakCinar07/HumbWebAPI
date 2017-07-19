@@ -41,17 +41,7 @@ namespace Humb.Service.Services
         public IEnumerable<BookTransaction> GetBookTransactions(int bookId)
         {
             return _bookTransactionRepository.FindBy(x => x.BookId == bookId);
-        }
-        public IEnumerable<BookTransactionDTO> GetBookTransactionDTOs(int bookId)
-        {
-            List<BookTransactionDTO> bookTransactionDTOs = new List<BookTransactionDTO>();
-            var bookTransactions = _bookTransactionRepository.FindBy(x => x.BookId == bookId);
-            foreach (var bt in bookTransactions)
-            {
-                EasyMapper.Map<BookTransactionDTO>(bt);
-            }
-            return bookTransactionDTOs;
-        }
+        }        
         public int GetUserTakenBookTransactionCount(int takerUserId, int bookId, int transactionType)
         {
             return _bookTransactionRepository.FindBy(x => x.TakerUserId == takerUserId && x.BookId == bookId && x.TransactionType == transactionType).Count();

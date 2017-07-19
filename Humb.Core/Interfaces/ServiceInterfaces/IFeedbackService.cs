@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Humb.Core.Interfaces.ServiceInterfaces
 {
-    interface IFeedbackService
+    public interface IFeedbackService
     {
         void AddFeedback(string email, string feedback);
     }

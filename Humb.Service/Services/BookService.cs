@@ -8,6 +8,7 @@ using Humb.Core.DTOs;
 using Humb.Core.Entities;
 using Humb.Core.Interfaces.RepositoryInterfaces;
 using Humb.Core.Constants;
+using Humb.Service.Helpers;
 
 namespace Humb.Service.Services
 {
@@ -46,21 +47,8 @@ namespace Humb.Service.Services
                 BookPictureUrl = imageURL + "BookPictures/" + path,
                 BookPictureThumbnailUrl = imageURL + "BookPicturesThumbnails/" + thumbnailPath,
             };
-            _bookRepository.Insert(book);
-            int interactionType;
-            switch (bookState)
-            {
-                case ResponseConstant.STATE_OPENED_TO_SHARE:
-                    interactionType = ResponseConstant.INTERACTION_OPEN_TO_SHARE;
-                    break;
-                case ResponseConstant.STATE_READING:
-                    interactionType = ResponseConstant.INTERACTION_READ_START;
-                    break;
-                default:
-                    interactionType = ResponseConstant.INTERACTION_CLOSE_TO_SHARE;
-                    break;
-            }
-            _bookInteractionService.AddInteraction(book, email, interactionType);
+            _bookRepository.Insert(book);            
+            _bookInteractionService.AddInteraction(book, email, TypeConverter.BookStateToInteractionType(bookState));
             return book.Id;
         }
 
@@ -159,5 +147,6 @@ namespace Humb.Service.Services
         {
             return _bookRepository.FindBy(x => x.BookState == ResponseConstant.STATE_READING && x.OwnerId == userId);
         }
+        
     }
 }

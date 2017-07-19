@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Humb.Core.Entities;
-using Humb.Core.DTOs;
 
 namespace Humb.Core.Interfaces.ServiceInterfaces
 {
@@ -12,7 +7,6 @@ namespace Humb.Core.Interfaces.ServiceInterfaces
     {
         void AddTransaction(int bookID, int giverUserId, int takerUserId, Book book, int transactionType);
         IEnumerable<BookTransaction> GetBookTransactions(int bookId);
-        IEnumerable<BookTransactionDTO> GetBookTransactionDTOs(int bookId);
         BookTransaction GetBookLastTransaction(int bookId);
         int GetUserTakenBookTransactionCount(int takerUserId, int bookId, int transactionType);
         int GetTakerUserTransactionCount(int takerUserId, int transactionType);

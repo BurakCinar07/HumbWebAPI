@@ -12,9 +12,9 @@ namespace Humb.Core.Interfaces.ServiceInterfaces
     {
         void CreateUser(string email, string password, string nameSurname);
         int GetTotalUserCount();
-        bool UserEmailExist(string email);
-        bool UserExist(int userId);
-        bool UserExist(string email, string password);
+        bool IsUserEmailExist(string email);
+        bool IsUserExist(int userId);
+        bool IsUserExist(string email, string password);
         int GetUserId(string email);
         User GetUser(string email);
         User GetUser(int userId);

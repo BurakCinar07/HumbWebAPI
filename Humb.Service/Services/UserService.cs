@@ -17,22 +17,25 @@ namespace Humb.Service.Services
     public class UserService : IUserService
     {
         private readonly IRepository<User> _userRepository;
-        private readonly IRepository<BlockUser> _blockUserRepository;
+        private readonly IRepository<BlockUser> _blockedUsersRepository;
+        private readonly IRepository<ReportUser> _reportedUsersRepository;
         private readonly IRepository<ForgottenPassword> _forgottenPasswordsRepository;
-        private readonly IRepository<BookInteraction> _bookInteractionRepository;
+        private readonly IRepository<Feedback> _feedbackRepository;
         private readonly IBookTransactionService _bookTransactionService;
+        private readonly IBookInteractionService _bookInteractionService;
         private readonly IBookService _bookService;
         private IEmailFactory _emailFactory;
-        public UserService(IBookTransactionService bookTransactionService, IBookService bookService, IRepository<User> userRepo, IRepository<Book> bookRepo, IRepository<BlockUser> blockUserRepo, IRepository<ForgottenPassword> forgottenPasswordsRepo
-            , IRepository<BookInteraction> bookInteractionRepo, IEmailFactory emailFactory)
+        public UserService(IBookTransactionService bookTransactionService, IBookInteractionService bookInteractionService, IBookService bookService, IRepository<User> userRepo, IRepository<Book> bookRepo, IRepository<BlockUser> blockUserRepo, IRepository<ForgottenPassword> forgottenPasswordsRepo
+            , IRepository<ReportUser> reportedUsersRepo, IRepository<Feedback> feedbackRepo, IEmailFactory emailFactory)
         {
             this._bookTransactionService = bookTransactionService;
+            this._bookInteractionService = bookInteractionService;
             this._bookService = bookService;
             this._userRepository = userRepo;
-            this._blockUserRepository = blockUserRepo;
+            this._blockedUsersRepository = blockUserRepo;
+            this._reportedUsersRepository = reportedUsersRepo;
+            this._feedbackRepository = feedbackRepo;
             this._forgottenPasswordsRepository = forgottenPasswordsRepo;
-            this._bookInteractionRepository = bookInteractionRepo;
-
             this._emailFactory = emailFactory;
         }
 
@@ -40,7 +43,7 @@ namespace Humb.Service.Services
         {
             if (String.IsNullOrEmpty(email) || String.IsNullOrEmpty(nameSurname) || String.IsNullOrEmpty(password))
                 throw new ArgumentNullException("parameter is null");
-            if (UserExist(email, password))
+            if (IsUserExist(email, password))
                 throw new Exception();
 
             User user = new User()
@@ -56,7 +59,7 @@ namespace Humb.Service.Services
         }
         public void BlockUser(int fromUserId, int toUserId)
         {
-            if (!UserExist(fromUserId) || !UserExist(toUserId))
+            if (!IsUserExist(fromUserId) || !IsUserExist(toUserId))
                 throw new Exception();
             BlockUser blockedUsers = new BlockUser()
             {
@@ -64,7 +67,7 @@ namespace Humb.Service.Services
                 ToUserId = toUserId,
                 CreatedAt = DateTime.Now
             };
-            _blockUserRepository.Insert(blockedUsers);
+            _blockedUsersRepository.Insert(blockedUsers);
         }
         public int GetTotalUserCount()
         {
@@ -180,23 +183,38 @@ namespace Humb.Service.Services
 
         public int GetUserProfilePoint(int userId)
         {
-            throw new NotImplementedException();
-        }
+            int point = 0;
+            point += _bookInteractionService.GetUserInteractionCountWithType(userId, ResponseConstant.INTERACTION_ADD) * 2;
+            point += _bookInteractionService.GetUserInteractionCountWithTypeDistinct(userId, ResponseConstant.INTERACTION_READ_STOP);
+            point += _bookTransactionService.GetGiverUserTransactionCount(userId, ResponseConstant.TRANSACTION_COME_TO_HAND) * 5;
+            point += _bookTransactionService.GetTakerUserTransactionCount(userId, ResponseConstant.TRANSACTION_COME_TO_HAND) * 3;
 
+            point -= _bookTransactionService.GetGiverUserTransactionCount(userId, ResponseConstant.TRANSACTION_LOST) * 10;
+            point -= _bookTransactionService.GetTakerUserTransactionCount(userId, ResponseConstant.TRANSACTION_LOST) * 10;
+            return point;
+        }
 
         public bool IsUserBlocked(int fromUserId, int toUserId)
         {
-            throw new NotImplementedException();
+            return _blockedUsersRepository.Any(x => (x.FromUserId == fromUserId && x.ToUserId == toUserId) || (x.FromUserId == toUserId && x.ToUserId == fromUserId));
         }
 
         public bool IsUserVerified(string email)
         {
-            throw new NotImplementedException();
+            return _userRepository.Any(x => x.Email == email && x.EmailVerified);
         }
 
         public void ReportUser(int fromUserID, int toUserID, int reportCode, string reportInfo)
         {
-            throw new NotImplementedException();
+            ReportUser ru = new ReportUser()
+            {
+                FromUserId = fromUserID,
+                ToUserId = toUserID,
+                ReportCode = reportCode,
+                ReportInfo = reportInfo,
+                CreatedAt = DateTime.Now
+            };
+            _reportedUsersRepository.Insert(ru);
         }
 
         public void ResendEmailVerification(string email)
@@ -216,35 +234,40 @@ namespace Humb.Service.Services
 
         public void UpdateUserBio(string email, string bio)
         {
-            throw new NotImplementedException();
+            User user = GetUser(email);
+            user.Bio = bio;
         }
 
         public void UpdateUserLocation(string email, double latidue, double longitude)
         {
-            throw new NotImplementedException();
+            User user = GetUser(email);
+            user.Latitude = latidue;
+            user.Longitude = longitude;
+            _userRepository.Update(user, user.Id);
         }
 
         public void UpdateUserName(string email, string name)
         {
-            throw new NotImplementedException();
+            User user = GetUser(email);
+            user.NameSurname = name;
+            _userRepository.Update(user, user.Id);
         }
 
-        public bool UserEmailExist(string email)
+        public bool IsUserEmailExist(string email)
         {
-            throw new NotImplementedException();
+            return _userRepository.Any(x => x.Email == email);
         }
 
-        public bool UserExist(int userId)
+        public bool IsUserExist(int userId)
         {
             return _userRepository.Any(x => x.Id == userId);
         }
 
-        public bool UserExist(string email, string password)
+        public bool IsUserExist(string email, string password)
         {
             return _userRepository.Any(x => x.Email == email && x.Password == password);
         }
 
-
-
+        
     }
 }

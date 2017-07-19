@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Humb.Core.Interfaces.ServiceInterfaces
 {
-    interface ILovedGenreService
+    public interface ILovedGenreService
     {
         void AddGenreCodes(string email, int[] genreCodes);
-        int[] GetUserLovedGenreCodes(string email);
+        IEnumerable<int> GetUserLovedGenreCodes(string email);
     }
 }
