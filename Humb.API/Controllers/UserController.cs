@@ -25,6 +25,7 @@ namespace Humb.API.Controllers
         [HttpGet]
         public string RegisterUser()
         {
+
             _userService.CreateUser("bab", "asdfasdf", "dsafsdgsdf");
             return null;
         }
@@ -47,7 +48,7 @@ namespace Humb.API.Controllers
         [HttpGet]
         public IList<BookDTO> GetUserBooksOnHand()
         {
-            return _userService.GetUserBooksOnHand(2);
+            return null;
         }
 
     }
