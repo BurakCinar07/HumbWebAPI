@@ -19,7 +19,6 @@ namespace Humb.Service.Services
         private readonly IRepository<User> _userRepository;
         private readonly IRepository<BlockUser> _blockUserRepository;
         private readonly IRepository<ForgottenPassword> _forgottenPasswordsRepository;
-        private readonly IRepository<BookTransaction> _bookTransactionRepository;
         private readonly IRepository<BookInteraction> _bookInteractionRepository;
         private readonly IBookTransactionService _bookTransactionService;
         private readonly IBookService _bookService;
@@ -93,7 +92,7 @@ namespace Humb.Service.Services
             fp.Email = email;
             fp.NewPassword = TextHelper.GenerateRandomPassword();
             fp.Token = TextHelper.CalculateMD5Hash(new Random().Next(0, 1000).ToString());
-            object[] forgottenPasswordEmailObject = {user.Email, user.NameSurname, fp.NewPassword, fp.Token};
+            object[] forgottenPasswordEmailObject = { user.Email, user.NameSurname, fp.NewPassword, fp.Token };
             _emailFactory.Initialize(EmailEnums.TurkishForgotPasswordEmail, forgottenPasswordEmailObject);
             _forgottenPasswordsRepository.Insert(fp);
         }
@@ -148,61 +147,6 @@ namespace Humb.Service.Services
             //Dispatch olduğunda puan direk artırıldığı için kitabı kaybeden giverdan önce verilen puan alınır ardından bir puan daha düşürülür, takerdan puan dispatchte düşürüldüğü için puanına dokunulmaz.
             counter -= 2 * _bookTransactionService.GetGiverUserTransactionCount(userId, ResponseConstant.TRANSACTION_LOST);
             return counter;
-        }
-
-        //Is mapping necessary?
-        public IList<BookDTO> GetUserBooksOnHand(int userId)
-        {
-            List<BookDTO> books = new List<BookDTO>();
-
-            var booksOnHand = _bookInteractionRepository.FindBy(x => (x.Book.BookState == ResponseConstant.STATE_OPENED_TO_SHARE || x.Book.BookState == ResponseConstant.STATE_CLOSED_TO_SHARE ||
-                x.Book.BookState == ResponseConstant.STATE_ON_ROAD || x.Book.BookState == ResponseConstant.STATE_LOST) && x.Book.OwnerId == userId).GroupBy(x => x.BookId).Select(x => x.OrderByDescending(j => j.CreatedAt)).Select(x => x.FirstOrDefault()).OrderByDescending(x => x.CreatedAt).
-                Select(i => new { i.Book.Id, i.Book.BookName, i.Book.BookPictureUrl, i.Book.BookPictureThumbnailUrl, i.Book.Author, i.Book.BookState, i.Book.GenreCode });
-
-            foreach (var book in booksOnHand)
-            {
-                books.Add(EasyMapper.Map<BookDTO>(book));
-            }
-            return books;
-        }
-
-        
-        public IList<BookDTO> GetUserOnRoadBooks(int userId)
-        {
-            List<BookDTO> books = new List<BookDTO>();
-
-            var bookTransactions = _bookTransactionRepository.FindBy(x => x.TakerUserId == userId)
-                .OrderByDescending(x => x.CreatedAt)
-                .GroupBy(y => y.Id).Select(i => i.FirstOrDefault()).OrderByDescending(x => x.CreatedAt)
-                .Select(i => new { i.BookId, i.GiverUserId, i.TakerUserId, i.CreatedAt })
-                .ToList();
-
-            foreach (var bookTransaction in bookTransactions)
-            {
-                BookTransaction transaction = _bookTransactionService.GetBookLastTransaction(bookTransaction.BookId);
-                if (transaction.TakerUserId == userId && transaction.TransactionType == ResponseConstant.TRANSACTION_DISPATCH)
-                {
-                    //book = GetBookModel(lastTransaction.bookID);
-                    //if (book.owner.ID == lastTransaction.giverUserID && book.owner.ID != uID && book.bookState == ResponseConstant.STATE_ON_ROAD)
-                    //{
-                    //    bms.Add(book);
-                    //}
-                }
-            }
-            return books;
-        }
-        public IList<BookDTO> GetUserReadBooks(int userId)
-        {
-            List<BookDTO> books = new List<BookDTO>();
-            var bookInteractions = _bookInteractionRepository.FindBy(x => x.InteractionType == ResponseConstant.INTERACTION_READ_STOP && x.UserId == userId).
-                GroupBy(x => x.BookId).Select(x => x.OrderByDescending(j => j.CreatedAt)).Select(x => x.FirstOrDefault()).OrderByDescending(x => x.CreatedAt).
-                Select(i => new { i.BookId, i.Book.BookName, i.Book.BookPictureThumbnailUrl, i.Book.BookPictureUrl, i.Book.Author, i.Book.BookState, i.Book.GenreCode, i.User });
-
-            foreach (var book in bookInteractions)
-            {
-                books.Add(EasyMapper.Map<BookDTO>(book));
-            }
-            return books;
         }
 
         public string GetFcmToken(int userId)

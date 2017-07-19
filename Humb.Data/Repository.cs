@@ -63,7 +63,7 @@ namespace Humb.Data
                 T existing = Entities.Find(id);
                 if (existing != null)
                 {
-                    _context.Entry(entity).CurrentValues.SetValues(entity);
+                    _context.Entry(existing).CurrentValues.SetValues(entity);
                     _context.SaveChanges();
                 }
             }

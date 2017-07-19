@@ -8,18 +8,21 @@ using Humb.Core.DTOs;
 using Humb.Core.Entities;
 using Humb.Core.Interfaces.RepositoryInterfaces;
 using Humb.Core.Constants;
-using System.Configuration;
 
 namespace Humb.Service.Services
 {
     public class BookService : IBookService
     {
+        private const string imageURL = "http://82.165.97.141:4000/Images/";
+
         private readonly IRepository<Book> _bookRepository;
+        private readonly IRepository<ReportBook> _reportedBookRepository;
         private readonly IUserService _userService;
         private readonly IBookInteractionService _bookInteractionService;
-        public BookService(IRepository<Book> bookRepo, IUserService userService, IBookInteractionService bookInteractionService)
+        public BookService(IRepository<Book> bookRepo, IRepository<ReportBook> reportedBookRepo, IUserService userService, IBookInteractionService bookInteractionService)
         {
             this._bookRepository = bookRepo;
+            this._reportedBookRepository = reportedBookRepo;
             this._userService = userService;
             this._bookInteractionService = bookInteractionService;
         }
@@ -40,8 +43,8 @@ namespace Humb.Service.Services
                 CreatedAt = DateTime.Now,
                 GenreCode = genreCode,
                 BookState = bookState,
-                BookPictureUrl = ConfigurationManager.AppSettings["ImageSaveUrl"] + "BookPictures/" + path,
-                BookPictureThumbnailUrl = ConfigurationManager.AppSettings["ImageSaveUrl"] + "BookPicturesThumbnails/" + thumbnailPath,
+                BookPictureUrl = imageURL + "BookPictures/" + path,
+                BookPictureThumbnailUrl = imageURL + "BookPicturesThumbnails/" + thumbnailPath,
             };
             _bookRepository.Insert(book);
             int interactionType;
@@ -93,19 +96,27 @@ namespace Humb.Service.Services
 
         
 
-        public IList<Book> GetBooksByLovedGenres(ICollection<LovedGenre> lovedGenres)
+        public IEnumerable<Book> GetBooksByLovedGenres(ICollection<LovedGenre> lovedGenres)
         {
             throw new NotImplementedException();
         }
 
         public int GetBookState(int bookID)
         {
-            throw new NotImplementedException();
+            return _bookRepository.FindSingleBy(x => x.Id == bookID).BookState;
         }
 
-        public void ReportBook(int userID, int bookID, int reportCode, string reportInfo)
+        public void ReportBook(int userId, int bookId, int reportCode, string reportInfo)
         {
-            throw new NotImplementedException();
+            ReportBook rb = new ReportBook()
+            {
+                BookId = bookId,
+                UserId = userId,
+                ReportCode = reportCode,
+                ReportInfo = reportInfo,
+                CreatedAt = DateTime.Now
+            };
+            _reportedBookRepository.Insert(rb);
         }
 
         public bool SetBookStateLost(string email, int bookID)
@@ -113,24 +124,36 @@ namespace Humb.Service.Services
             throw new NotImplementedException();
         }
 
-        public void UpdateBookDetails(int bookID, string bookName, string author, int genreCode)
+        public void UpdateBookDetails(int bookId, string bookName, string author, int genreCode)
         {
-            throw new NotImplementedException();
+            Book book = GetBook(bookId);
+            book.BookName = bookName;
+            book.Author = author;
+            book.GenreCode = genreCode;
+            _bookRepository.Update(book, bookId);
         }
 
-        public void UpdateBookOwner(int bookID, int userID)
+        public void UpdateBookOwner(int bookId, int userId)
         {
-            throw new NotImplementedException();
+            Book book = GetBook(bookId);
+            book.OwnerId = userId;
+            _bookRepository.Update(book, bookId);
         }
 
-        public string[] UpdateBookPicture(string picturePath, string thumbnailPath, int bookID)
+        public string[] UpdateBookPicture(int bookId, string picturePath, string thumbnailPath)
         {
-            throw new NotImplementedException();
+            Book book = GetBook(bookId);
+            book.BookPictureUrl = imageURL + "BookPictures/" + picturePath;
+            book.BookPictureThumbnailUrl = imageURL + "BookPicturesThumbnails/" + thumbnailPath;
+            _bookRepository.Update(book, bookId);
+            return new string[] { book.BookPictureUrl, book.BookPictureThumbnailUrl };
         }
 
-        public void UpdateBookState(int bookID, int state)
+        public void UpdateBookState(int bookId, int bookState)
         {
-            throw new NotImplementedException();
+            Book book = GetBook(bookId);
+            book.BookState = bookState;
+            _bookRepository.Update(book, bookId);
         }
         public IEnumerable<Book> GetUserCurrentlyReadingBooks(int userId)
         {

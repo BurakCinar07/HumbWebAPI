@@ -17,7 +17,7 @@ namespace Humb.Core.Interfaces.ServiceInterfaces
         string GetBookPictureUrl(int bookId);
         string GetBookPictureThumbnailURL(int bookId);
         void UpdateBookState(int bookId, int state);
-        string[] UpdateBookPicture(string picturePath, string thumbnailPath, int bookId);
+        string[] UpdateBookPicture(int bookId, string picturePath, string thumbnailPath);
         void UpdateBookOwner(int bookId, int userId);
         void UpdateBookDetails(int bookId, string bookName, string author, int genreCode);
         bool IsUserBookOwner(int bookId, int userId);
@@ -25,7 +25,7 @@ namespace Humb.Core.Interfaces.ServiceInterfaces
         IList<BookDTO> GetBookDTOByGenre(int genreCode, string email, bool searchPressed);
         int GetBookOwnerId(int bookId);
         bool SetBookStateLost(string email, int bookId);
-        IList<Book> GetBooksByLovedGenres(ICollection<LovedGenre> lovedGenres);
-
+        IEnumerable<Book> GetBooksByLovedGenres(ICollection<LovedGenre> lovedGenres);
+        IEnumerable<Book> GetUserCurrentlyReadingBooks(int userId);
     }
 }

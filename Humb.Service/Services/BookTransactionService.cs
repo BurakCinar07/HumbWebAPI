@@ -38,11 +38,11 @@ namespace Humb.Service.Services
             return _bookTransactionRepository.FindBy(x => x.BookId == bookId).OrderByDescending(x => x.CreatedAt).FirstOrDefault();
         }
 
-        public IList<BookTransaction> GetBookTransactions(int bookId)
+        public IEnumerable<BookTransaction> GetBookTransactions(int bookId)
         {
-            return _bookTransactionRepository.FindBy(x => x.BookId == bookId).ToList();
+            return _bookTransactionRepository.FindBy(x => x.BookId == bookId);
         }
-        public IList<BookTransactionDTO> GetBookTransactionDTOs(int bookId)
+        public IEnumerable<BookTransactionDTO> GetBookTransactionDTOs(int bookId)
         {
             List<BookTransactionDTO> bookTransactionDTOs = new List<BookTransactionDTO>();
             var bookTransactions = _bookTransactionRepository.FindBy(x => x.BookId == bookId);
@@ -63,6 +63,11 @@ namespace Humb.Service.Services
         public int GetGiverUserTransactionCount(int giverUserId, int transactionType)
         {
             return _bookTransactionRepository.FindBy(x => x.TransactionType == transactionType && x.GiverUserId == giverUserId).Count();
+        }
+
+        public IEnumerable<Book> GetUserOnRoadBooks(int userId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

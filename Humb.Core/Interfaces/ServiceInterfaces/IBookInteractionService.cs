@@ -10,9 +10,11 @@ namespace Humb.Core.Interfaces.ServiceInterfaces
     public interface IBookInteractionService
     {
         bool AddInteraction(Book book, string email, int interactionType);
-        IList<BookInteraction> GetInteractions(int bookID);
-        int GetInteractionCount(int bookID);
+        IList<BookInteraction> GetBookInteractions(int bookId);
+        int GetInteractionCount(int bookId);
         bool CanAddInteraction(int interactionType, int bookState);
         int GetBookPopularity(string bookName, DateTime dateTime);
+        IEnumerable<Book> GetUserBooksOnHand(int userId);
+        IEnumerable<Book> GetUserReadBooks(int userId);
     }
 }

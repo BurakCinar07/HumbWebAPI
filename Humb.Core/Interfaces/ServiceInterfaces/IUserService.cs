@@ -40,8 +40,5 @@ namespace Humb.Core.Interfaces.ServiceInterfaces
         string ChangePassword(string email, string password);
         void ForgotPasswordRequest(string email);
         int GetUserGivenBookCount(int userId);
-        IList<BookDTO> GetUserBooksOnHand(int userId);
-        IList<BookDTO> GetUserReadBooks(int userId);
-        IList<BookDTO> GetUserOnRoadBooks(int userId);
     }
 }

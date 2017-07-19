@@ -40,9 +40,20 @@ namespace Humb.Service.Services
             return popularity;
         }
 
-        public IList<BookInteraction> GetInteractions(int bookID)
+        public IList<BookInteraction> GetBookInteractions(int bookId)
         {
             throw new NotImplementedException();
+        }
+        public IEnumerable<Book> GetUserBooksOnHand(int userId)
+        {
+            return _bookInteractionRepository.FindBy(x => (x.Book.BookState == ResponseConstant.STATE_OPENED_TO_SHARE || x.Book.BookState == ResponseConstant.STATE_CLOSED_TO_SHARE ||
+                x.Book.BookState == ResponseConstant.STATE_ON_ROAD || x.Book.BookState == ResponseConstant.STATE_LOST) && x.Book.OwnerId == userId).GroupBy(x => x.BookId).
+                Select(x => x.OrderByDescending(j => j.CreatedAt)).Select(x => x.FirstOrDefault()).OrderByDescending(x => x.CreatedAt).Select(x=>x.Book);
+        }
+        public IEnumerable<Book> GetUserReadBooks(int userId)
+        {
+            return _bookInteractionRepository.FindBy(x => x.InteractionType == ResponseConstant.INTERACTION_READ_STOP && x.UserId == userId).
+                GroupBy(x => x.BookId).Select(x => x.OrderByDescending(j => j.CreatedAt)).Select(x => x.FirstOrDefault()).OrderByDescending(x => x.CreatedAt).Select(x=>x.Book);
         }
     }
 }
