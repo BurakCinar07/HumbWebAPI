@@ -61,9 +61,9 @@
     <Compile Include="Services\EmailService\EmailDispatchers\SmtpEmailDispatcher.cs" />
     <Compile Include="Services\BookTransactionService.cs" />
     <Compile Include="Services\FeedbackService.cs" />
+    <Compile Include="Services\InformClient\FcmInformClient.cs" />
     <Compile Include="Services\LovedGenreService.cs" />
     <Compile Include="Services\MessageService.cs" />
-    <Compile Include="Services\MessageServiceProviders\FcmMessageSender.cs" />
     <Compile Include="Services\UserService.cs" />
   </ItemGroup>
   <ItemGroup>

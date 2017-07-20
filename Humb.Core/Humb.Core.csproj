@@ -81,8 +81,8 @@
     <Compile Include="Interfaces\ServiceInterfaces\IInfiltratorService.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\ILovedGenreService.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\IMessageService.cs" />
+    <Compile Include="Interfaces\ServiceInterfaces\InformClientInterfaces\IInformClient.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\IUserService.cs" />
-    <Compile Include="Interfaces\ServiceInterfaces\MessageInterfaces\IMessageSender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
