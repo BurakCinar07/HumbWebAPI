@@ -9,6 +9,6 @@ namespace Humb.Core.Interfaces.ServiceInterfaces.MessageInterfaces
 {
     public interface IMessageSender
     {
-        void SendMessage(User fromUser, User toUser, int messageId, string messageText);
+        void SendMessage(int messageId, User fromUser, User toUser, string messageText);
     }
 }

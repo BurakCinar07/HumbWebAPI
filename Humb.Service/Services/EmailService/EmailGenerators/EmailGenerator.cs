@@ -12,16 +12,21 @@ namespace Humb.Service.Services.EmailService.EmailGenerators
 {
     public class EmailGenerator : IEmailGenerator
     {
-        private readonly IEmailContentGenerator _emailContentGenerator;
         private readonly string _sendToEmailAddress;
-        public EmailGenerator(IEmailContentGenerator emailContentGenerator, string sendToEmailAddress)
+        private readonly string _subject;
+        private readonly string _body;
+        public EmailGenerator(string sendToEmailAddress, string subject, string body)
         {
-            this._emailContentGenerator = emailContentGenerator;
             this._sendToEmailAddress = sendToEmailAddress;
+            this._subject = subject;
+            this._body = body;
         }
         public MailMessage Generate()
-        {            
-            MailMessage msg = _emailContentGenerator.GenerateEmailContent();
+        {
+            MailMessage msg = new MailMessage();
+            msg.Subject = _subject;
+            msg.IsBodyHtml = true;
+            msg.Body = _body;
             msg.From = new MailAddress(ConfigurationManager.AppSettings["SmtpMailAddress"]);
             msg.To.Add(new MailAddress(_sendToEmailAddress));
             return msg;

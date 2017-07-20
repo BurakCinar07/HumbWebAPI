@@ -56,8 +56,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\BookInteractionService.cs" />
     <Compile Include="Services\BookService.cs" />
-    <Compile Include="Services\EmailService\EmailContentGenerators\TurkishForgottenPasswordEmailContentGenerator.cs" />
-    <Compile Include="Services\EmailService\EmailContentGenerators\TurkishVerificationEmailContentGenerator.cs" />
     <Compile Include="Services\EmailService\EmailFactory.cs" />
     <Compile Include="Services\EmailService\EmailGenerators\EmailGenerator.cs" />
     <Compile Include="Services\EmailService\EmailDispatchers\SmtpEmailDispatcher.cs" />

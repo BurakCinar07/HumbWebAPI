@@ -34,7 +34,7 @@ namespace Humb.Service.Services
                 CreatedAt = DateTime.Now
             };
             _messageRepository.Insert(message);
-            _messageSender.SendMessage(_userService.GetUser(fromUserId), _userService.GetUser(toUserId), message.Id, messageText);
+            _messageSender.SendMessage(message.Id, _userService.GetUser(fromUserId), _userService.GetUser(toUserId), messageText);
             return message.Id;
         }
 
@@ -53,19 +53,29 @@ namespace Humb.Service.Services
             throw new NotImplementedException();
         }
 
-        public int GetFromUserIDByMessageID(int messageID)
+        public int GetFromUserIDByMessageID(int messageId)
         {
-            throw new NotImplementedException();
+            return _messageRepository.FindSingleBy(x => x.Id == messageId).FromUserId;
         }
 
         public void UpdateMessageState(int messageId, string email, int messageType)
         {
-            throw new NotImplementedException();
-        }
-
-        IEnumerable<Core.Entities.Message> IMessageService.GetFetchedMessages(string email, int[] userIds)
-        {
-            throw new NotImplementedException();
+            Message m = _messageRepository.FindSingleBy(x => x.Id == messageId);
+            int userId = _userService.GetUserId(email);
+            if (!(m.FromUserId == userId) && !(m.ToUserId == userId))
+                return;
+            
+            if (messageType == ResponseConstant.MESSAGE_TYPE_DELIVERED)
+            {
+                m.ToUserMessageState = ResponseConstant.MESSAGE_TO_USER_STATE_RECIEVED;
+                m.FromUserMessageState = ResponseConstant.MESSAGE_FROM_USER_STATE_DELIVERED;
+                _messageRepository.Save();
+            }
+            else if (messageType == ResponseConstant.MESSAGE_TYPE_SEEN)
+            {
+                m.FromUserMessageState = ResponseConstant.MESSAGE_FROM_USER_STATE_SEEN;
+                _messageRepository.Save();
+            }
         }
     }
 }

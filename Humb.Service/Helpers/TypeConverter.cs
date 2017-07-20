@@ -27,5 +27,13 @@ namespace Humb.Service.Helpers
             else
                 return ResponseConstant.STATE_CLOSED_TO_SHARE;
         }
+        public static int MessageTypeToFcmMessageDataType(int messageType)
+        {
+            if (messageType == ResponseConstant.MESSAGE_TYPE_SEEN)
+                return ResponseConstant.FCM_DATA_TYPE_SEEN_MESSAGE;
+            
+            else
+                return ResponseConstant.FCM_DATA_TYPE_DELIVERED_MESSAGE;
+        }
     }
 }

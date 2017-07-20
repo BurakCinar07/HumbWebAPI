@@ -17,7 +17,7 @@ namespace Humb.Service.Services.MessageServiceProviders
 {
     public class FcmMessageSender : IMessageSender
     {
-        public void SendMessage(User fromUser, User toUser, int messageId, string messageText)
+        public void SendMessage(int messageId, User fromUser, User toUser, string messageText)
         {
             try
             {
@@ -85,5 +85,7 @@ namespace Humb.Service.Services.MessageServiceProviders
             {
             }
         }
+
+       
     }
 }
