@@ -43,7 +43,6 @@ namespace BookieAPI.Controllers.Utils.ModelUtils
                     {
                         m.fromUserMessageState = ResponseConstant.MESSAGE_FROM_USER_STATE_DELETED;
                     }
-
                 }
                 else if (m.toUserID == userID)
                 {
