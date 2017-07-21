@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Humb.Core.Interfaces.ServiceInterfaces.EmailInterfaces
+namespace Humb.Core.Interfaces
 {
-    public interface IEmailFactory
+    public interface IEmailGeneratorFactory
     {
-        void Initialize(EmailEnums val, object[] objs);
+        IEmailGenerator GetEmailGenerator(EmailEnums val);
     }
 }

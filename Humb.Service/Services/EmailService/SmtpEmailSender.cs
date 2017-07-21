@@ -5,13 +5,19 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Mail;
 using System.Configuration;
-using Humb.Core.Interfaces.ServiceInterfaces.EmailInterfaces;
+using Humb.Core.Interfaces;
 
 namespace Humb.Service.Services.EmailService.EmailDispatchers
 {
-    public class SmtpEmailDispatcher : IEmailDispatcher
-    {        
-        public void Dispatch(IEmailGenerator emailGenerator)
+    public class SmtpEmailSender : IInformationSender
+    {
+        private readonly IEmailGenerator _emailGenerator;
+        public SmtpEmailSender(IEmailGenerator emailGenerator)
+        {
+            _emailGenerator = emailGenerator;
+        }
+
+        public void Send()
         {
             try
             {
@@ -20,15 +26,14 @@ namespace Humb.Service.Services.EmailService.EmailDispatchers
                 client.EnableSsl = false;
                 client.Host = ConfigurationManager.AppSettings["SmtpServerHost"];
                 client.Port = int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]);
-                // setup Smtp authentication
                 System.Net.NetworkCredential credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["SmtpServerUserName"], ConfigurationManager.AppSettings["SmtpServerPassword"]);
                 client.UseDefaultCredentials = false;
                 client.Credentials = credentials;
                 client.Timeout = 1000;
 
-                client.Send(emailGenerator.Generate());
+                client.Send(_emailGenerator.GenerateContent());
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 //TODO : LOGGING
             }

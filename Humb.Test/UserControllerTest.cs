@@ -31,7 +31,6 @@ namespace Humb.Test
         private IUserService us;
         List<User> users;
         [SetUp]
-
         public void Initialize()
         {
             users = new List<User>{
@@ -93,7 +92,6 @@ namespace Humb.Test
             catch (Exception e)
             {
                 Assert.Fail("null exception" + e.Message);
-
             }
         }
         [Test]        

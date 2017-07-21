@@ -10,7 +10,6 @@ using Humb.Service.Services;
 using Humb.Core.Interfaces.RepositoryInterfaces;
 using Humb.Data;
 using Humb.Service.Services.EmailService.EmailDispatchers;
-using Humb.Core.Interfaces.ServiceInterfaces.EmailInterfaces;
 using Humb.Service.Services.EmailService;
 
 namespace Humb.API.IoC.Installers
@@ -24,8 +23,6 @@ namespace Humb.API.IoC.Installers
             container.Register(Component.For<IBookInteractionService>().ImplementedBy<BookInteractionService>().LifestylePerWebRequest());
             container.Register(Component.For(typeof(IRepository<>)).ImplementedBy(typeof(Repository<>)).LifestylePerWebRequest());
             container.Register(Component.For<IDbContext>().ImplementedBy<EFDbContext>().LifestylePerWebRequest());
-            container.Register(Component.For<IEmailFactory>().ImplementedBy<EmailFactory>().LifeStyle.Singleton);
-            container.Register(Component.For<IEmailDispatcher>().ImplementedBy<SmtpEmailDispatcher>().LifeStyle.Singleton);
         }
     }
 }

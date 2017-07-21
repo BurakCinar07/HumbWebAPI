@@ -5,10 +5,10 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Humb.Core.Interfaces.ServiceInterfaces.EmailInterfaces
+namespace Humb.Core.Interfaces
 {
-    public interface IEmailDispatcher
+    public interface IEmailGenerator
     {
-        void Dispatch(IEmailGenerator emailGenerator);
+        MailMessage GenerateContent();
     }
 }

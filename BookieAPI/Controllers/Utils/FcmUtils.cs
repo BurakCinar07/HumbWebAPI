@@ -16,8 +16,7 @@ namespace BookieAPI.Controllers.Utils
     public static class FcmUtils
     {
         internal static void SendRequestNotification(Context context, int bookID, int fromUserID, int toUserID, int dataType)
-        {
-            
+        {           
 
             string applicationID = ResponseConstant.APPLICATION_ID;
 
@@ -199,14 +198,10 @@ namespace BookieAPI.Controllers.Utils
 
                         using (Stream dataStreamResponse = tResponse.GetResponseStream())
                         {
-
                             using (StreamReader tReader = new StreamReader(dataStreamResponse))
                             {
-
                                 String sResponseFromServer = tReader.ReadToEnd();
-
                                 string str = sResponseFromServer;
-
                             }
                         }
                     }

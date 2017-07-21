@@ -10,7 +10,6 @@ using Humb.Core.Interfaces.RepositoryInterfaces;
 using Humb.Service.Helpers;
 using Humb.Core.Constants;
 using Pelusoft.EasyMapper;
-using Humb.Core.Interfaces.ServiceInterfaces.EmailInterfaces;
 
 namespace Humb.Service.Services
 {
@@ -23,9 +22,8 @@ namespace Humb.Service.Services
         private readonly IBookTransactionService _bookTransactionService;
         private readonly IBookInteractionService _bookInteractionService;
         private readonly IBookService _bookService;
-        private IEmailFactory _emailFactory;
         public UserService(IBookTransactionService bookTransactionService, IBookInteractionService bookInteractionService, IBookService bookService, IRepository<User> userRepo, IRepository<Book> bookRepo, IRepository<BlockUser> blockUserRepo, IRepository<ForgottenPassword> forgottenPasswordsRepo
-            , IRepository<ReportUser> reportedUsersRepo, IEmailFactory emailFactory)
+            , IRepository<ReportUser> reportedUsersRepo)
         {
             this._bookTransactionService = bookTransactionService;
             this._bookInteractionService = bookInteractionService;
@@ -34,7 +32,6 @@ namespace Humb.Service.Services
             this._blockedUsersRepository = blockUserRepo;
             this._reportedUsersRepository = reportedUsersRepo;
             this._forgottenPasswordsRepository = forgottenPasswordsRepo;
-            this._emailFactory = emailFactory;
         }
 
         public void CreateUser(string email, string password, string nameSurname)
@@ -96,7 +93,7 @@ namespace Humb.Service.Services
                 CreatedAt = DateTime.Now
             };
             object[] forgottenPasswordEmailObject = { user.Email, user.NameSurname, fp.NewPassword, fp.Token };
-            _emailFactory.Initialize(EmailEnums.TurkishForgotPasswordEmail, forgottenPasswordEmailObject);
+            //SendEmail
             _forgottenPasswordsRepository.Insert(fp);
         }
         public void ConfirmForgottenPasswordRequest(string email, string token)

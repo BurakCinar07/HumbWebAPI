@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Net.Mail;
 using Humb.Core.Entities;
 using System.Configuration;
-using Humb.Core.Interfaces.ServiceInterfaces.EmailInterfaces;
+using Humb.Core.Interfaces;
 
 namespace Humb.Service.Services.EmailService.EmailGenerators
 {
@@ -21,8 +21,9 @@ namespace Humb.Service.Services.EmailService.EmailGenerators
             this._subject = subject;
             this._body = body;
         }
-        public MailMessage Generate()
+        public MailMessage GenerateContent()
         {
+            //Eğer ing ise ayrı tr ise ayrı
             MailMessage msg = new MailMessage();
             msg.Subject = _subject;
             msg.IsBodyHtml = true;
