@@ -9,15 +9,10 @@ using Humb.Core.Interfaces;
 
 namespace Humb.Service.Services.EmailService.EmailDispatchers
 {
-    public class SmtpEmailSender : IInformationSender
-    {
-        private readonly IEmailGenerator _emailGenerator;
-        public SmtpEmailSender(IEmailGenerator emailGenerator)
-        {
-            _emailGenerator = emailGenerator;
-        }
+    public class SmtpEmailSender : IEmailSender
+    {       
 
-        public void Send()
+        public void Send(MailMessage msg)
         {
             try
             {
@@ -31,7 +26,7 @@ namespace Humb.Service.Services.EmailService.EmailDispatchers
                 client.Credentials = credentials;
                 client.Timeout = 1000;
 
-                client.Send(_emailGenerator.GenerateContent());
+                client.Send(msg);
             }
             catch (Exception e)
             {

@@ -9,8 +9,9 @@ using Humb.Core.Interfaces.ServiceInterfaces;
 using Humb.Service.Services;
 using Humb.Core.Interfaces.RepositoryInterfaces;
 using Humb.Data;
-using Humb.Service.Services.EmailService.EmailDispatchers;
+using Humb.Core.Interfaces;
 using Humb.Service.Services.EmailService;
+using Humb.Service.Services.EmailService.EmailDispatchers;
 
 namespace Humb.API.IoC.Installers
 {
@@ -18,11 +19,13 @@ namespace Humb.API.IoC.Installers
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            container.Register(Component.For<IUserService>().ImplementedBy<UserService>().LifestylePerWebRequest());
-            container.Register(Component.For<IBookTransactionService>().ImplementedBy<BookTransactionService>().LifestylePerWebRequest());
-            container.Register(Component.For<IBookInteractionService>().ImplementedBy<BookInteractionService>().LifestylePerWebRequest());
+            container.Register(Component.For<IUserService>().ImplementedBy<UserService>().LifestyleSingleton());
+            container.Register(Component.For<IBookTransactionService>().ImplementedBy<BookTransactionService>().LifestyleSingleton());
+            container.Register(Component.For<IBookInteractionService>().ImplementedBy<BookInteractionService>().LifestyleSingleton());
             container.Register(Component.For(typeof(IRepository<>)).ImplementedBy(typeof(Repository<>)).LifestylePerWebRequest());
             container.Register(Component.For<IDbContext>().ImplementedBy<EFDbContext>().LifestylePerWebRequest());
+            container.Register(Component.For<IEmailGeneratorFactory>().ImplementedBy<EmailGeneratorFactory>().LifestyleSingleton());
+            container.Register(Component.For<IEmailSender>().ImplementedBy<SmtpEmailSender>().LifestyleSingleton());
         }
     }
 }

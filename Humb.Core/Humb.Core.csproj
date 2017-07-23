@@ -71,7 +71,6 @@
     <Compile Include="Entities\ReportUser.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Interfaces\IEmailGeneratorFactory.cs" />
-    <Compile Include="Interfaces\IMessageGenerator.cs" />
     <Compile Include="Interfaces\IPushNotificationGenerator.cs" />
     <Compile Include="Interfaces\RepositoryInterfaces\IRepository.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\IBookInteractionService.cs" />
@@ -81,7 +80,7 @@
     <Compile Include="Interfaces\ServiceInterfaces\IFeedbackService.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\IInfiltratorService.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\ILovedGenreService.cs" />
-    <Compile Include="Interfaces\IInformationSender.cs" />
+    <Compile Include="Interfaces\IEmailSender.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\IMessageService.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\IUserService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

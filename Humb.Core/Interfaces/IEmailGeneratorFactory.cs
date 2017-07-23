@@ -9,6 +9,6 @@ namespace Humb.Core.Interfaces
 {
     public interface IEmailGeneratorFactory
     {
-        IEmailGenerator GetEmailGenerator(EmailEnums val);
+        IEmailGenerator GetEmailGenerator(EmailEnums val, params string[] parameters);
     }
 }

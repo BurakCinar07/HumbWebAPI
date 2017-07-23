@@ -9,7 +9,7 @@ using Humb.Core.Interfaces.ServiceInterfaces;
 using Humb.Core.Interfaces.RepositoryInterfaces;
 using Humb.Service.Helpers;
 using Humb.Core.Constants;
-using Pelusoft.EasyMapper;
+using Humb.Core.Interfaces;
 
 namespace Humb.Service.Services
 {
@@ -22,16 +22,20 @@ namespace Humb.Service.Services
         private readonly IBookTransactionService _bookTransactionService;
         private readonly IBookInteractionService _bookInteractionService;
         private readonly IBookService _bookService;
+        private readonly IEmailSender _emailSender;
+        private readonly IEmailGeneratorFactory _emailFactory;
         public UserService(IBookTransactionService bookTransactionService, IBookInteractionService bookInteractionService, IBookService bookService, IRepository<User> userRepo, IRepository<Book> bookRepo, IRepository<BlockUser> blockUserRepo, IRepository<ForgottenPassword> forgottenPasswordsRepo
-            , IRepository<ReportUser> reportedUsersRepo)
+            , IRepository<ReportUser> reportedUsersRepo, IEmailSender emailSender, IEmailGeneratorFactory emailFactory)
         {
-            this._bookTransactionService = bookTransactionService;
-            this._bookInteractionService = bookInteractionService;
-            this._bookService = bookService;
-            this._userRepository = userRepo;
-            this._blockedUsersRepository = blockUserRepo;
-            this._reportedUsersRepository = reportedUsersRepo;
-            this._forgottenPasswordsRepository = forgottenPasswordsRepo;
+            _bookTransactionService = bookTransactionService;
+            _bookInteractionService = bookInteractionService;
+            _bookService = bookService;
+            _userRepository = userRepo;
+            _blockedUsersRepository = blockUserRepo;
+            _reportedUsersRepository = reportedUsersRepo;
+            _forgottenPasswordsRepository = forgottenPasswordsRepo;
+            _emailSender = emailSender;
+            _emailFactory = emailFactory;
         }
 
         public void CreateUser(string email, string password, string nameSurname)
@@ -51,6 +55,7 @@ namespace Humb.Service.Services
                 VerificationHash = TextHelper.CalculateMD5Hash(new Random().Next(0, 1000).ToString()),
             };
             _userRepository.Insert(user);
+            _emailSender.Send(_emailFactory.GetEmailGenerator(EmailEnums.VerificationEmail, user.Email, user.NameSurname, user.VerificationHash).GenerateContent(EmailLanguageEnums.Turkish));            
         }
         public void BlockUser(int fromUserId, int toUserId)
         {
@@ -93,8 +98,8 @@ namespace Humb.Service.Services
                 CreatedAt = DateTime.Now
             };
             object[] forgottenPasswordEmailObject = { user.Email, user.NameSurname, fp.NewPassword, fp.Token };
-            //SendEmail
             _forgottenPasswordsRepository.Insert(fp);
+            _emailSender.Send(_emailFactory.GetEmailGenerator(EmailEnums.ForgottenPasswordEmail, user.Email, user.NameSurname, fp.NewPassword, fp.Token).GenerateContent(EmailLanguageEnums.English));
         }
         public void ConfirmForgottenPasswordRequest(string email, string token)
         {
@@ -135,10 +140,7 @@ namespace Humb.Service.Services
         {
             return _userRepository.FindSingleBy(x => x.Id == userId);
         }
-        public UserDTO GetUserDTO(int userId)
-        {
-            return EasyMapper.Map<UserDTO>(GetUser(userId));
-        }
+        
         public int GetUserBookCounter(int userId)
         {
             int counter = 100;

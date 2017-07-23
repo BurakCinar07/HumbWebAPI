@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Humb.Core.Constants;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
@@ -9,6 +10,6 @@ namespace Humb.Core.Interfaces
 {
     public interface IEmailGenerator
     {
-        MailMessage GenerateContent();
+        MailMessage GenerateContent(EmailLanguageEnums val);
     }
 }

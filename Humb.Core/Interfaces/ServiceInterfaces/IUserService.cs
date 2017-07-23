@@ -18,7 +18,6 @@ namespace Humb.Core.Interfaces.ServiceInterfaces
         int GetUserId(string email);
         User GetUser(string email);
         User GetUser(int userId);
-        UserDTO GetUserDTO(int userId);
         string GetFcmToken(int userId);
         int GetUserBookCounter(int userId);
         int GetUserProfilePoint(int userId);

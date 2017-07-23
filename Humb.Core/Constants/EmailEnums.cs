@@ -8,9 +8,12 @@ namespace Humb.Core.Constants
 {
     public enum EmailEnums
     {
-        TurkishVerificationEmail,
-        EnglishVerificationEmail,
-        TurkishForgotPasswordEmail,
-        EnglishForgotPasswordEmail
+        VerificationEmail,
+        ForgottenPasswordEmail
+    }
+    public enum EmailLanguageEnums
+    {
+        Turkish,
+        English
     }
 }
