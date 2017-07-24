@@ -22,6 +22,7 @@ namespace Humb.API.IoC.Installers
             container.Register(Component.For<IUserService>().ImplementedBy<UserService>().LifestyleSingleton());
             container.Register(Component.For<IBookTransactionService>().ImplementedBy<BookTransactionService>().LifestyleSingleton());
             container.Register(Component.For<IBookInteractionService>().ImplementedBy<BookInteractionService>().LifestyleSingleton());
+            container.Register(Component.For<IEmailService>().ImplementedBy<EmailService>().LifestyleSingleton());
             container.Register(Component.For(typeof(IRepository<>)).ImplementedBy(typeof(Repository<>)).LifestylePerWebRequest());
             container.Register(Component.For<IDbContext>().ImplementedBy<EFDbContext>().LifestylePerWebRequest());
             container.Register(Component.For<IEmailGeneratorFactory>().ImplementedBy<EmailGeneratorFactory>().LifestyleSingleton());

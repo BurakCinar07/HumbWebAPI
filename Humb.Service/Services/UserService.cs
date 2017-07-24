@@ -22,10 +22,9 @@ namespace Humb.Service.Services
         private readonly IBookTransactionService _bookTransactionService;
         private readonly IBookInteractionService _bookInteractionService;
         private readonly IBookService _bookService;
-        private readonly IEmailSender _emailSender;
-        private readonly IEmailGeneratorFactory _emailFactory;
+        private readonly IEmailService _emailService;
         public UserService(IBookTransactionService bookTransactionService, IBookInteractionService bookInteractionService, IBookService bookService, IRepository<User> userRepo, IRepository<Book> bookRepo, IRepository<BlockUser> blockUserRepo, IRepository<ForgottenPassword> forgottenPasswordsRepo
-            , IRepository<ReportUser> reportedUsersRepo, IEmailSender emailSender, IEmailGeneratorFactory emailFactory)
+            , IRepository<ReportUser> reportedUsersRepo, IEmailService emailService)
         {
             _bookTransactionService = bookTransactionService;
             _bookInteractionService = bookInteractionService;
@@ -34,17 +33,11 @@ namespace Humb.Service.Services
             _blockedUsersRepository = blockUserRepo;
             _reportedUsersRepository = reportedUsersRepo;
             _forgottenPasswordsRepository = forgottenPasswordsRepo;
-            _emailSender = emailSender;
-            _emailFactory = emailFactory;
+            _emailService = emailService;
         }
 
         public void CreateUser(string email, string password, string nameSurname)
         {
-            if (String.IsNullOrEmpty(email) || String.IsNullOrEmpty(nameSurname) || String.IsNullOrEmpty(password))
-                throw new ArgumentNullException("parameter is null");
-            if (IsUserExist(email, password))
-                throw new Exception();
-
             User user = new User()
             {
                 Email = email,
@@ -55,7 +48,7 @@ namespace Humb.Service.Services
                 VerificationHash = TextHelper.CalculateMD5Hash(new Random().Next(0, 1000).ToString()),
             };
             _userRepository.Insert(user);
-            _emailSender.Send(_emailFactory.GetEmailGenerator(EmailEnums.VerificationEmail, user.Email, user.NameSurname, user.VerificationHash).GenerateContent(EmailLanguageEnums.Turkish));            
+            _emailService.SendEmail(EmailEnums.VerificationEmail, EmailLanguageEnums.Turkish, user.Email, user.NameSurname, user.VerificationHash);            
         }
         public void BlockUser(int fromUserId, int toUserId)
         {
@@ -99,7 +92,7 @@ namespace Humb.Service.Services
             };
             object[] forgottenPasswordEmailObject = { user.Email, user.NameSurname, fp.NewPassword, fp.Token };
             _forgottenPasswordsRepository.Insert(fp);
-            _emailSender.Send(_emailFactory.GetEmailGenerator(EmailEnums.ForgottenPasswordEmail, user.Email, user.NameSurname, fp.NewPassword, fp.Token).GenerateContent(EmailLanguageEnums.English));
+            _emailService.SendEmail(EmailEnums.ForgottenPasswordEmail, EmailLanguageEnums.Turkish, user.Email, user.NameSurname, fp.NewPassword, fp.Token);
         }
         public void ConfirmForgottenPasswordRequest(string email, string token)
         {

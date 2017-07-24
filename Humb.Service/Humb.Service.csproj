@@ -57,6 +57,7 @@
     <Compile Include="Services\BookInteractionService.cs" />
     <Compile Include="Services\BookService.cs" />
     <Compile Include="Services\EmailService\EmailGeneratorFactory.cs" />
+    <Compile Include="Services\EmailService\EmailService.cs" />
     <Compile Include="Services\EmailService\ForgottenPasswordEmailContentGenerator.cs" />
     <Compile Include="Services\EmailService\SmtpEmailSender.cs" />
     <Compile Include="Services\BookTransactionService.cs" />
