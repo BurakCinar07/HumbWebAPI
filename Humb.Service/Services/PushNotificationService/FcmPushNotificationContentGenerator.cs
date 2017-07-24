@@ -14,12 +14,12 @@ namespace Humb.Service.Services.PushNotificationService
         {
             var data = new
             {
-                to = parameters[0],
+                to = parameters[1],
                 data = new
                 {
-                    sender = parameters[1],
-                    book = parameters[2],
-                    fcmDataType = parameters[3]
+                    sender = parameters[2],
+                    book = parameters[3],
+                    fcmDataType = parameters[4]
                 }
             };
             var serializer = new JavaScriptSerializer();

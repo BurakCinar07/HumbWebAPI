@@ -9,6 +9,7 @@ using Humb.Core.Entities;
 using Humb.Core.Interfaces.RepositoryInterfaces;
 using Humb.Core.Constants;
 using Humb.Service.Helpers;
+using Humb.Core.Interfaces.ServiceInterfaces.PushNotification;
 
 namespace Humb.Service.Services
 {
@@ -20,12 +21,17 @@ namespace Humb.Service.Services
         private readonly IRepository<ReportBook> _reportedBookRepository;
         private readonly IUserService _userService;
         private readonly IBookInteractionService _bookInteractionService;
-        public BookService(IRepository<Book> bookRepo, IRepository<ReportBook> reportedBookRepo, IUserService userService, IBookInteractionService bookInteractionService)
+        private readonly IBookTransactionService _bookTransactionService;
+        private readonly IPushNotificationService _pushNotificationService;
+        public BookService(IRepository<Book> bookRepo, IRepository<ReportBook> reportedBookRepo, IUserService userService, 
+            IBookInteractionService bookInteractionService, IPushNotificationService pushService, IBookTransactionService bookTransactionService)
         {
-            this._bookRepository = bookRepo;
-            this._reportedBookRepository = reportedBookRepo;
-            this._userService = userService;
-            this._bookInteractionService = bookInteractionService;
+            _bookRepository = bookRepo;
+            _reportedBookRepository = reportedBookRepo;
+            _userService = userService;
+            _bookInteractionService = bookInteractionService;
+            _pushNotificationService = pushService;
+            _bookTransactionService = bookTransactionService;
         }
         public bool IsBookAddedByUser(int bookID, int userID)
         {
@@ -107,9 +113,21 @@ namespace Humb.Service.Services
             _reportedBookRepository.Insert(rb);
         }
 
-        public bool SetBookStateLost(string email, int bookID)
+        public bool SetBookStateLost(string email, int bookId)
         {
-            throw new NotImplementedException();
+            Book book = GetBook(bookId);
+            User user = _userService.GetUser(email); 
+            if(book.BookState == ResponseConstant.STATE_ON_ROAD && book.OwnerId == user.Id)
+            {
+                book.BookState = ResponseConstant.STATE_LOST;
+                _bookRepository.Update(book, bookId);
+                BookTransaction bt = _bookTransactionService.GetBookLastTransactionWithGiverUserId(book.Id, user.Id);
+                bt.TransactionType = ResponseConstant.TRANSACTION_LOST;
+                _bookTransactionService.UpdateBookTransaction(bt);
+                _pushNotificationService.SendPushNotification(user.FcmToken, _userService.GetFcmToken(bt.TakerUserId), user, book, ResponseConstant.FCM_DATA_TYPE_TRANSACTION_LOST);
+                return true;
+            }
+            return false;
         }
 
         public void UpdateBookDetails(int bookId, string bookName, string author, int genreCode)

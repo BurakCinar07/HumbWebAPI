@@ -61,5 +61,18 @@ namespace Humb.Service.Services
                 x.Book.OwnerId != userId && x.Book.BookState == ResponseConstant.STATE_ON_ROAD).
                 OrderByDescending(x=>x.CreatedAt).GroupBy(x=>x.BookId).Select(x=>x.FirstOrDefault()).OrderByDescending(x=>x.CreatedAt).Select(x=>x.Book);
         }
+
+        public BookTransaction GetBookLastTransactionWithGiverUserId(int bookId, int userId)
+        {
+            return _bookTransactionRepository.FindBy(x => x.BookId == bookId && x.GiverUserId == userId).OrderByDescending(x => x.CreatedAt).FirstOrDefault();
+        }
+        public BookTransaction GetBookTransaction(int transactionId)
+        {
+            return _bookTransactionRepository.FindSingleBy(x => x.Id == transactionId);
+        }
+        public void UpdateBookTransaction(BookTransaction transaction)
+        {
+            _bookTransactionRepository.Update(transaction, transaction.Id);
+        }
     }
 }
