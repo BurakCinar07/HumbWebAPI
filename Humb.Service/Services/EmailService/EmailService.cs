@@ -18,7 +18,7 @@ namespace Humb.Service.Services.EmailService
             _emailGeneratorFactory = emailGeneratorFactory;
             _emailSender = emailSender;
         }
-        public void SendEmail(EmailEnums val, EmailLanguageEnums lang, params string[] parameters)
+        public void SendEmail(EmailEnums val, LanguageEnums lang, params string[] parameters)
         {
             _emailSender.Send(_emailGeneratorFactory.GetEmailGenerator(val, parameters).GenerateContent(lang));
         }

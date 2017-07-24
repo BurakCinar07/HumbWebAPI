@@ -10,6 +10,6 @@ namespace Humb.Core.Interfaces
 {
     public interface IEmailGenerator
     {
-        MailMessage GenerateContent(EmailLanguageEnums val);
+        MailMessage GenerateContent(LanguageEnums val);
     }
 }

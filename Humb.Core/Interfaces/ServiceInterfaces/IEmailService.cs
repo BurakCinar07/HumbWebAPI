@@ -9,6 +9,6 @@ namespace Humb.Core.Interfaces.ServiceInterfaces
 {
     public interface IEmailService
     {
-        void SendEmail(EmailEnums val, EmailLanguageEnums lang, params string[] parameters);
+        void SendEmail(EmailEnums val, LanguageEnums lang, params string[] parameters);
     }
 }

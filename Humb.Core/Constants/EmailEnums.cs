@@ -11,9 +11,15 @@ namespace Humb.Core.Constants
         VerificationEmail,
         ForgottenPasswordEmail
     }
-    public enum EmailLanguageEnums
+    public enum LanguageEnums
     {
         Turkish,
         English
+    }
+    public enum PushNotificationEnums
+    {
+        BookRequestNotification,
+        EmailVerifiedNotification,
+        MessageRecievedNotification
     }
 }

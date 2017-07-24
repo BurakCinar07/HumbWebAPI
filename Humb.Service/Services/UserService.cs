@@ -48,7 +48,7 @@ namespace Humb.Service.Services
                 VerificationHash = TextHelper.CalculateMD5Hash(new Random().Next(0, 1000).ToString()),
             };
             _userRepository.Insert(user);
-            _emailService.SendEmail(EmailEnums.VerificationEmail, EmailLanguageEnums.Turkish, user.Email, user.NameSurname, user.VerificationHash);            
+            _emailService.SendEmail(EmailEnums.VerificationEmail, LanguageEnums.Turkish, user.Email, user.NameSurname, user.VerificationHash);            
         }
         public void BlockUser(int fromUserId, int toUserId)
         {
@@ -90,9 +90,8 @@ namespace Humb.Service.Services
                 Token = TextHelper.CalculateMD5Hash(new Random().Next(0, 1000).ToString()),
                 CreatedAt = DateTime.Now
             };
-            object[] forgottenPasswordEmailObject = { user.Email, user.NameSurname, fp.NewPassword, fp.Token };
             _forgottenPasswordsRepository.Insert(fp);
-            _emailService.SendEmail(EmailEnums.ForgottenPasswordEmail, EmailLanguageEnums.Turkish, user.Email, user.NameSurname, fp.NewPassword, fp.Token);
+            _emailService.SendEmail(EmailEnums.ForgottenPasswordEmail, LanguageEnums.Turkish, user.Email, user.NameSurname, fp.NewPassword, fp.Token);
         }
         public void ConfirmForgottenPasswordRequest(string email, string token)
         {
@@ -212,7 +211,10 @@ namespace Humb.Service.Services
 
         public void ResendEmailVerification(string email)
         {
-            throw new NotImplementedException();
+            User user = GetUser(email);
+            user.VerificationHash = TextHelper.CalculateMD5Hash(new Random().Next(0, 1000).ToString());
+            _userRepository.Update(user, user.Id);
+            _emailService.SendEmail(EmailEnums.VerificationEmail, LanguageEnums.Turkish, user.Email, user.NameSurname, user.VerificationHash);
         }
 
         public string[] SaveUserProfilePicture(string email, string path, string thumbnailPath)
@@ -229,6 +231,7 @@ namespace Humb.Service.Services
         {
             User user = GetUser(email);
             user.Bio = bio;
+            _userRepository.Update(user, user.Id);
         }
 
         public void UpdateUserLocation(string email, double latidue, double longitude)

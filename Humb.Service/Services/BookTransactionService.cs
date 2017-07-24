@@ -54,10 +54,12 @@ namespace Humb.Service.Services
         {
             return _bookTransactionRepository.FindBy(x => x.TransactionType == transactionType && x.GiverUserId == giverUserId).Count();
         }
-
         public IEnumerable<Book> GetUserOnRoadBooks(int userId)
         {
-            throw new NotImplementedException();
+            return _bookTransactionRepository.FindBy(x => x.TakerUserId == userId && x.TransactionType == ResponseConstant.TRANSACTION_DISPATCH &&
+                x.Book.BookTransactions.OrderByDescending(y=>y.CreatedAt).FirstOrDefault().GiverUserId == x.Book.OwnerId && 
+                x.Book.OwnerId != userId && x.Book.BookState == ResponseConstant.STATE_ON_ROAD).
+                OrderByDescending(x=>x.CreatedAt).GroupBy(x=>x.BookId).Select(x=>x.FirstOrDefault()).OrderByDescending(x=>x.CreatedAt).Select(x=>x.Book);
         }
     }
 }

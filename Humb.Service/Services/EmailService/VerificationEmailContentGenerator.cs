@@ -18,14 +18,14 @@ namespace Humb.Service.Services.EmailService
         {
             _parameters = parameters;
         }
-        public MailMessage GenerateContent(EmailLanguageEnums val)
+        public MailMessage GenerateContent(LanguageEnums val)
         {
             MailMessage msg = new MailMessage();
             msg.IsBodyHtml = true;
             msg.From = new MailAddress(ConfigurationManager.AppSettings["SmtpMailAddress"]);
             msg.To.Add(new MailAddress(_parameters[0]));
 
-            if (val == EmailLanguageEnums.Turkish)
+            if (val == LanguageEnums.Turkish)
             {
                 msg.Subject = "Humb Email Doğrulama";
                 msg.Body = string.Format("<html><head></head><body>Thanks for signing up " + _parameters[1] + "!<br>Your account has been created, you can login with the following credentials after you have activated your account by pressing the url below. <br> 82.165.97.141:4000/api/EmailVerification?email=" + _parameters[0] + "&verificationHash=" + _parameters[2] + "</body></html>");
