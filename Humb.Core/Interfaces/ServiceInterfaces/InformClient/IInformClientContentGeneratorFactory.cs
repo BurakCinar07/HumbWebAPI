@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Humb.Core.Interfaces.ServiceInterfaces.InformClient
 {
-    public interface IInformClientService
+    public interface IInformClientContentGeneratorFactory
     {
-        void InformClient(InformClientEnums val, params object[] parameters);
+        IInformClientContentGenerator GenerateWebRequest(InformClientEnums val, params object[] parameters);
     }
 }

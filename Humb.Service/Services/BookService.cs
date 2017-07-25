@@ -9,7 +9,7 @@ using Humb.Core.Entities;
 using Humb.Core.Interfaces.RepositoryInterfaces;
 using Humb.Core.Constants;
 using Humb.Service.Helpers;
-using Humb.Core.Interfaces.ServiceInterfaces.PushNotification;
+using Humb.Core.Interfaces.ServiceInterfaces.InformClient;
 
 namespace Humb.Service.Services
 {
@@ -22,16 +22,16 @@ namespace Humb.Service.Services
         private readonly IUserService _userService;
         private readonly IBookInteractionService _bookInteractionService;
         private readonly IBookTransactionService _bookTransactionService;
-        private readonly IPushNotificationService _pushNotificationService;
+        private readonly IInformClientService _informClientService;
         public BookService(IRepository<Book> bookRepo, IRepository<ReportBook> reportedBookRepo, IUserService userService, 
-            IBookInteractionService bookInteractionService, IPushNotificationService pushService, IBookTransactionService bookTransactionService)
+            IBookInteractionService bookInteractionService, IInformClientService informClientService, IBookTransactionService bookTransactionService)
         {
             _bookRepository = bookRepo;
             _reportedBookRepository = reportedBookRepo;
             _userService = userService;
             _bookInteractionService = bookInteractionService;
-            _pushNotificationService = pushService;
             _bookTransactionService = bookTransactionService;
+            _informClientService = informClientService;
         }
         public bool IsBookAddedByUser(int bookID, int userID)
         {
@@ -86,13 +86,11 @@ namespace Humb.Service.Services
         public string GetBookPictureUrl(int bookId)
         {
             return _bookRepository.FindSingleBy(x => x.Id == bookId).BookPictureUrl;
-        }
-
-        
+        }        
 
         public IEnumerable<Book> GetBooksByLovedGenres(ICollection<LovedGenre> lovedGenres)
-        {
-            throw new NotImplementedException();
+        {            
+            return null;
         }
 
         public int GetBookState(int bookID)
@@ -124,7 +122,7 @@ namespace Humb.Service.Services
                 BookTransaction bt = _bookTransactionService.GetBookLastTransactionWithGiverUserId(book.Id, user.Id);
                 bt.TransactionType = ResponseConstant.TRANSACTION_LOST;
                 _bookTransactionService.UpdateBookTransaction(bt);
-                _pushNotificationService.SendPushNotification(user.FcmToken, _userService.GetFcmToken(bt.TakerUserId), user, book, ResponseConstant.FCM_DATA_TYPE_TRANSACTION_LOST);
+                _informClientService.InformClient(InformClientEnums.NotificationRequest, user.FcmToken, _userService.GetFcmToken(bt.TakerUserId), user, book, ResponseConstant.FCM_DATA_TYPE_TRANSACTION_LOST);
                 return true;
             }
             return false;

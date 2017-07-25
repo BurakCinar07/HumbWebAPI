@@ -8,6 +8,6 @@ namespace Humb.Core.Interfaces.ServiceInterfaces.InformClient
 {
     public interface IInformClientContentGenerator
     {
-        Byte[] GenerateContent(params string[] parameters);
+        Byte[] GenerateContent();
     }
 }

@@ -16,10 +16,11 @@ namespace Humb.Core.Constants
         Turkish,
         English
     }
-    public enum PushNotificationEnums
+    public enum InformClientEnums
     {
-        BookRequestNotification,
-        EmailVerifiedNotification,
-        MessageRecievedNotification
+        NotificationRequest,
+        EmailVerifiedRequest,
+        SendMessageRequest,
+        UpdateMessageStateRequest
     }
 }

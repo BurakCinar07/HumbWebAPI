@@ -10,6 +10,7 @@ using Humb.Core.Interfaces.RepositoryInterfaces;
 using Humb.Service.Helpers;
 using Humb.Core.Constants;
 using Humb.Core.Interfaces;
+using Pelusoft.EasyMapper;
 
 namespace Humb.Service.Services
 {
@@ -133,6 +134,11 @@ namespace Humb.Service.Services
             return _userRepository.FindSingleBy(x => x.Id == userId);
         }
         
+        public UserDTO GetUserDTO(int userId)
+        {
+            return EasyMapper.Map<UserDTO>(GetUser(userId));
+        }
+
         public int GetUserBookCounter(int userId)
         {
             int counter = 100;

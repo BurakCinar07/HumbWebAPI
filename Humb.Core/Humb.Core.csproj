@@ -51,11 +51,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseEntity.cs" />
-    <Compile Include="Constants\EmailEnums.cs" />
+    <Compile Include="Constants\Enums.cs" />
     <Compile Include="Constants\InfiltratorConstant.cs" />
     <Compile Include="Constants\ResponseConstant.cs" />
     <Compile Include="DTOs\BookDetailsDTO.cs" />
     <Compile Include="DTOs\BookDTO.cs" />
+    <Compile Include="DTOs\MessageDTO.cs" />
     <Compile Include="DTOs\UserDTO.cs" />
     <Compile Include="Entities\BlockUser.cs" />
     <Compile Include="Entities\Book.cs" />
@@ -71,9 +72,9 @@
     <Compile Include="Entities\ReportUser.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\Email\IEmailGeneratorFactory.cs" />
+    <Compile Include="Interfaces\ServiceInterfaces\InformClient\IInformClientContentGeneratorFactory.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\InformClient\IInformClientDataSender.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\InformClient\IInformClientService.cs" />
-    <Compile Include="Interfaces\ServiceInterfaces\PushNotification\IPushNotificationGenerator.cs" />
     <Compile Include="Interfaces\RepositoryInterfaces\IRepository.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\IBookInteractionService.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\IBookService.cs" />
@@ -86,8 +87,6 @@
     <Compile Include="Interfaces\ServiceInterfaces\Email\IEmailSender.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\IMessageService.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\IUserService.cs" />
-    <Compile Include="Interfaces\ServiceInterfaces\PushNotification\IPushNotificationSender.cs" />
-    <Compile Include="Interfaces\ServiceInterfaces\PushNotification\IPushNotificationService.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\InformClient\IInformClientContentGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

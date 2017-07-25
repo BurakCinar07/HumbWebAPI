@@ -1,4 +1,5 @@
-﻿using Humb.Core.Entities;
+﻿using Humb.Core.DTOs;
+using Humb.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace Humb.Core.Interfaces.ServiceInterfaces
         void UpdateMessageState(int messageId, string email, int messageType);
         void DeleteMessages(string email, int[] messageIds);
         void DeleteConversation(string email, int toUserId);
-        IEnumerable<Message> GetFetchedMessages(string email, int[] userIds);
+        IEnumerable<MessageDTO> GetFetchedMessages(string email, int[] userIds);
         int GetFromUserIDByMessageID(int messageID);
     }
 }

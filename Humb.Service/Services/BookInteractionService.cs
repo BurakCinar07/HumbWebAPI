@@ -50,7 +50,6 @@ namespace Humb.Service.Services
 
             return true;
         }
-
         public bool CanAddInteraction(int interactionType, int bookState)
         {
             bool canAdd = false;
@@ -77,7 +76,6 @@ namespace Humb.Service.Services
             }
             return canAdd;
         }
-
         public int GetBookInteractionCount(int bookId)
         {
             return _bookInteractionRepository.FindBy(x => x.BookId == bookId).Count();
@@ -94,7 +92,6 @@ namespace Humb.Service.Services
 
             return popularity;
         }
-
         public IEnumerable<BookInteraction> GetBookInteractions(int bookId)
         {
             return _bookInteractionRepository.FindBy(x => x.BookId == bookId);
@@ -110,12 +107,10 @@ namespace Humb.Service.Services
             return _bookInteractionRepository.FindBy(x => x.InteractionType == ResponseConstant.INTERACTION_READ_STOP && x.UserId == userId).
                 GroupBy(x => x.BookId).Select(x => x.OrderByDescending(j => j.CreatedAt)).Select(x => x.FirstOrDefault()).OrderByDescending(x => x.CreatedAt).Select(x => x.Book);
         }
-
         public int GetUserInteractionCountWithTypeDistinct(int userId, int interactionType)
         {
             return _bookInteractionRepository.FindBy(x => x.UserId == userId && x.InteractionType == interactionType).GroupBy(x => x.BookId).Select(x => x.FirstOrDefault()).Count();
         }
-
         public bool IsBookInteractionExist(int bookId)
         {
             return _bookInteractionRepository.Any(x => x.BookId == bookId);

@@ -35,5 +35,19 @@ namespace Humb.Service.Helpers
             else
                 return ResponseConstant.FCM_DATA_TYPE_DELIVERED_MESSAGE;
         }
+        public static int FromUserMessageStateToMessageType(int fromUserMessageState)
+        {
+            if(fromUserMessageState == ResponseConstant.MESSAGE_FROM_USER_STATE_SENT)            
+                return ResponseConstant.MESSAGE_TYPE_SENT;
+            
+            else if(fromUserMessageState == ResponseConstant.MESSAGE_FROM_USER_STATE_DELIVERED)            
+                return ResponseConstant.MESSAGE_TYPE_DELIVERED;
+            
+            else if(fromUserMessageState == ResponseConstant.MESSAGE_FROM_USER_STATE_SEEN)
+                return ResponseConstant.MESSAGE_TYPE_SEEN;
+            
+            else
+                return ResponseConstant.MESSAGE_TYPE_SENT;            
+        }
     }
 }

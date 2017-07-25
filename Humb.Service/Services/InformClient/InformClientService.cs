@@ -1,4 +1,5 @@
-﻿using Humb.Core.Interfaces.ServiceInterfaces.InformClient;
+﻿using Humb.Core.Constants;
+using Humb.Core.Interfaces.ServiceInterfaces.InformClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,16 +10,16 @@ namespace Humb.Service.Services.InformClient
 {
     public class InformClientService : IInformClientService
     {
-        IInformClientContentGenerator _contentGenerator;
-        IInformClientDataSender _dataSender;
-        public InformClientService(IInformClientContentGenerator contentGenerator, IInformClientDataSender dataSender)
+        private readonly IInformClientContentGeneratorFactory _contentGeneratorFactory;
+        private readonly IInformClientDataSender _dataSender;
+        public InformClientService(IInformClientContentGeneratorFactory contentGeneratorFactory, IInformClientDataSender dataSender)
         {
-            _contentGenerator = contentGenerator;
+            _contentGeneratorFactory = contentGeneratorFactory;
             _dataSender = dataSender;
         }
-        public void InformClient(params string[] parameters)
+        public void InformClient(InformClientEnums val,params object[] parameters)
         {
-            _dataSender.SendData(_contentGenerator.GenerateContent(parameters));
+            _dataSender.SendData(_contentGeneratorFactory.GenerateWebRequest(val, parameters).GenerateContent());
         }
     }
 }

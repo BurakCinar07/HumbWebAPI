@@ -8,16 +8,23 @@ using System.Web.Script.Serialization;
 
 namespace Humb.Service.Services.InformClient
 {
-    public class InformClientContentGenerator : IInformClientContentGenerator
+
+    //Inputs : 0: reciverFcmToken, 1: FcmDataType
+    public class BasicFcmContentGenerator : IInformClientContentGenerator
     {
-        public Byte[] GenerateContent(params string[] parameters)
+        private readonly object[] _parameters;
+        public BasicFcmContentGenerator(params object[] parameters)
+        {
+            _parameters = parameters;
+        }
+        public Byte[] GenerateContent()
         {
             var data = new
             {
-                to = parameters[0],
+                to = _parameters[0],
                 data = new
                 {
-                    fcmDataType = parameters[1],
+                    fcmDataType = _parameters[1],
                 }
             };
             var serializer = new JavaScriptSerializer();
