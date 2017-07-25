@@ -144,7 +144,7 @@ namespace Humb.Service.Services
             int counter = 100;
             counter += _bookTransactionService.GetGiverUserTransactionCount(userId, ResponseConstant.TRANSACTION_DISPATCH);
             counter -= _bookTransactionService.GetTakerUserTransactionCount(userId, ResponseConstant.TRANSACTION_DISPATCH);
-
+            
             //Dispatch olduğunda puan direk artırıldığı için kitabı kaybeden giverdan önce verilen puan alınır ardından bir puan daha düşürülür, takerdan puan dispatchte düşürüldüğü için puanına dokunulmaz.
             counter -= 2 * _bookTransactionService.GetGiverUserTransactionCount(userId, ResponseConstant.TRANSACTION_LOST);
             return counter;

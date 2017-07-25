@@ -50,6 +50,10 @@ namespace Humb.Service.Services
 
             return true;
         }
+        public void AddInteraction(BookInteraction bookInteraction)
+        {
+            _bookInteractionRepository.Insert(bookInteraction);
+        }
         public bool CanAddInteraction(int interactionType, int bookState)
         {
             bool canAdd = false;

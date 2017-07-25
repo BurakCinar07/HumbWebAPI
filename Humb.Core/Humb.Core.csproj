@@ -72,6 +72,7 @@
     <Compile Include="Entities\ReportUser.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\Email\IEmailGeneratorFactory.cs" />
+    <Compile Include="Interfaces\ServiceInterfaces\IBookRequestService.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\InformClient\IInformClientContentGeneratorFactory.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\InformClient\IInformClientDataSender.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\InformClient\IInformClientService.cs" />

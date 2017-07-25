@@ -12,7 +12,7 @@ namespace Humb.Core.Entities
 
         public int RespondingUserId { get; set; }
 
-        public int BookID { get; set; }
+        public int BookId { get; set; }
 
         public int RequestType { get; set; }
 
