@@ -17,19 +17,19 @@ namespace Humb.Service.Services
     public class UserService : IUserService
     {
         private readonly IRepository<User> _userRepository;
+        private readonly IRepository<Book> _bookRepository;
         private readonly IRepository<BlockUser> _blockedUsersRepository;
         private readonly IRepository<ReportUser> _reportedUsersRepository;
         private readonly IRepository<ForgottenPassword> _forgottenPasswordsRepository;
         private readonly IBookTransactionService _bookTransactionService;
         private readonly IBookInteractionService _bookInteractionService;
-        private readonly IBookService _bookService;
         private readonly IEmailService _emailService;
-        public UserService(IBookTransactionService bookTransactionService, IBookInteractionService bookInteractionService, IBookService bookService, IRepository<User> userRepo, IRepository<Book> bookRepo, IRepository<BlockUser> blockUserRepo, IRepository<ForgottenPassword> forgottenPasswordsRepo
+        public UserService(IBookTransactionService bookTransactionService, IBookInteractionService bookInteractionService, IRepository<Book> bookRepository, IRepository<User> userRepo, IRepository<Book> bookRepo, IRepository<BlockUser> blockUserRepo, IRepository<ForgottenPassword> forgottenPasswordsRepo
             , IRepository<ReportUser> reportedUsersRepo, IEmailService emailService)
         {
             _bookTransactionService = bookTransactionService;
             _bookInteractionService = bookInteractionService;
-            _bookService = bookService;
+            _bookRepository = bookRepository;
             _userRepository = userRepo;
             _blockedUsersRepository = blockUserRepo;
             _reportedUsersRepository = reportedUsersRepo;
@@ -114,12 +114,12 @@ namespace Humb.Service.Services
             return _userRepository.Any(x => x.Email == email && (x.Latitude != null && x.Longitude != null));
         }
 
-        public double GetDistanceBetweenTwoUsers(double lat1, double lat2, double lon1, double lon2)
+        public double GetDistanceBetweenTwoUsers(double? lat1, double? lat2, double? lon1, double? lon2)
         {
             var p = 0.017453292519943295;    // Math.PI / 180
-            var a = 0.5 - Math.Cos((lat2 - lat1) * p) / 2 +
-                    Math.Cos(lat1 * p) * Math.Cos(lat2 * p) *
-                    (1 - Math.Cos((lon2 - lon1) * p)) / 2;
+            var a = 0.5 - Math.Cos((lat2.Value - lat1.Value) * p) / 2 +
+                    Math.Cos(lat1.Value * p) * Math.Cos(lat2.Value * p) *
+                    (1 - Math.Cos((lon2.Value - lon1.Value) * p)) / 2;
 
             return 12742 * Math.Asin(Math.Sqrt(a));
         }
@@ -166,7 +166,7 @@ namespace Humb.Service.Services
         }
         public User GetBookOwner(int bookId)
         {
-            int ownerId = _bookService.GetBookOwnerId(bookId);
+            int ownerId = _bookRepository.FindSingleBy(x=>x.Id == bookId).OwnerId;
             return _userRepository.FindSingleBy(x => x.Id == ownerId);
         }
         public string GetUserProfilePictureThumbnailUrl(string email)

@@ -8,6 +8,7 @@ using System.Web.Http;
 using System.Web.Http.Results;
 using Humb.Core.Interfaces.ServiceInterfaces;
 using Humb.Core.DTOs;
+using System.IO;
 
 namespace Humb.API.Controllers
 {
@@ -25,7 +26,6 @@ namespace Humb.API.Controllers
         [HttpGet]
         public string RegisterUser()
         {
-
             _userService.CreateUser("bab", "asdfasdf", "dsafsdgsdf");
             return null;
         }

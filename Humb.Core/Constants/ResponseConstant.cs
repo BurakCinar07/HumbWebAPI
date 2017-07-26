@@ -7,6 +7,10 @@ namespace Humb.Core.Constants
 {
     public class ResponseConstant
     {
+        public const int POPULAR_BOOKS_COUNT = 5;
+        public const int POPULAR_BOOKS_GET_FOR_DAYS = 14;
+        public const string IMAGE_URL = "http://82.165.97.141:4000/Images/";
+
         public const string APPLICATION_ID = "AAAACNMFGAM:APA91bHfBhJdOCFQ04xcPsQ3H-Ez9_HTckKj5Fj7tX8xru0LaIdgZB3znm04nxEDMaDRazuaf2ZDqTWg1sEygsAbG8ly_7JVgeYjt3WKaHa130IAPNMyK_9ZvZis1SgLrspEM9DU2Rno";
         // Book interaction types
         public const int INTERACTION_ADD = 0;

@@ -16,6 +16,7 @@ namespace Humb.Core.Interfaces.ServiceInterfaces
         int GetBookState(int bookId);
         string GetBookPictureUrl(int bookId);
         string GetBookPictureThumbnailURL(int bookId);
+        Book GetRandomBookByBookName(string bookName);
         void UpdateBookState(int bookId, int state);
         string[] UpdateBookPicture(int bookId, string picturePath, string thumbnailPath);
         void UpdateBookOwner(int bookId, int userId);

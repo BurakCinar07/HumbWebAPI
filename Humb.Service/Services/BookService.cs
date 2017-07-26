@@ -15,8 +15,6 @@ namespace Humb.Service.Services
 {
     public class BookService : IBookService
     {
-        private const string imageURL = "http://82.165.97.141:4000/Images/";
-
         private readonly IRepository<Book> _bookRepository;
         private readonly IRepository<ReportBook> _reportedBookRepository;
         private readonly IUserService _userService;
@@ -50,8 +48,8 @@ namespace Humb.Service.Services
                 CreatedAt = DateTime.Now,
                 GenreCode = genreCode,
                 BookState = bookState,
-                BookPictureUrl = imageURL + "BookPictures/" + path,
-                BookPictureThumbnailUrl = imageURL + "BookPicturesThumbnails/" + thumbnailPath,
+                BookPictureUrl = ResponseConstant.IMAGE_URL + "BookPictures/" + path,
+                BookPictureThumbnailUrl = ResponseConstant.IMAGE_URL + "BookPicturesThumbnails/" + thumbnailPath,
             };
             _bookRepository.Insert(book);            
             _bookInteractionService.AddInteraction(book, email, TypeConverter.BookStateToInteractionType(bookState));
@@ -89,8 +87,14 @@ namespace Humb.Service.Services
         }        
 
         public IEnumerable<Book> GetBooksByLovedGenres(ICollection<LovedGenre> lovedGenres)
-        {            
-            return null;
+        {
+            List<Book> returnBooks = new List<Book>();
+            foreach (var genre in lovedGenres)
+            {
+                returnBooks.AddRange(_bookRepository.FindBy(x => x.OwnerId != genre.UserId && x.GenreCode == genre.GenreCode &&
+                (x.BookState == ResponseConstant.STATE_OPENED_TO_SHARE || x.BookState == ResponseConstant.STATE_READING)));
+            }
+            return returnBooks;
         }
 
         public int GetBookState(int bookID)
@@ -147,8 +151,8 @@ namespace Humb.Service.Services
         public string[] UpdateBookPicture(int bookId, string picturePath, string thumbnailPath)
         {
             Book book = GetBook(bookId);
-            book.BookPictureUrl = imageURL + "BookPictures/" + picturePath;
-            book.BookPictureThumbnailUrl = imageURL + "BookPicturesThumbnails/" + thumbnailPath;
+            book.BookPictureUrl = ResponseConstant.IMAGE_URL + "BookPictures/" + picturePath;
+            book.BookPictureThumbnailUrl = ResponseConstant.IMAGE_URL + "BookPicturesThumbnails/" + thumbnailPath;
             _bookRepository.Update(book, bookId);
             return new string[] { book.BookPictureUrl, book.BookPictureThumbnailUrl };
         }
@@ -163,6 +167,12 @@ namespace Humb.Service.Services
         {
             return _bookRepository.FindBy(x => x.BookState == ResponseConstant.STATE_READING && x.OwnerId == userId);
         }
+
+        public Book GetRandomBookByBookName(string bookName)
+        {
+            return _bookRepository.FindBy(x => x.BookName == bookName && x.BookState != ResponseConstant.STATE_LOST && x.BookState != ResponseConstant.STATE_ON_ROAD).OrderBy(x => Guid.NewGuid()).FirstOrDefault();
+        }
         
+
     }
 }

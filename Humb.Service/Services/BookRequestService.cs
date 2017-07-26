@@ -27,9 +27,9 @@ namespace Humb.Service.Services
             _userService = userService;
             _bookInteractionService = bookInteractionService;
         }
-
+        //TODO : Send Notification
         public void AddRequest(int bookId, int requestingUserId, int respondingUserId, int requestType)
-        {
+        {   
             Book book = _bookService.GetBook(bookId);
             if (book.BookState == ResponseConstant.STATE_READING)
             {

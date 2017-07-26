@@ -12,7 +12,6 @@ using Humb.Data;
 using Humb.Core.Interfaces;
 using Humb.Service.Services.EmailService;
 using Humb.Service.Services.EmailService.EmailDispatchers;
-using Humb.Core.Interfaces.ServiceInterfaces.PushNotification;
 using Humb.Service.Services.PushNotificationService;
 
 namespace Humb.API.IoC.Installers
@@ -29,9 +28,6 @@ namespace Humb.API.IoC.Installers
             container.Register(Component.For<IDbContext>().ImplementedBy<EFDbContext>().LifestylePerWebRequest());
             container.Register(Component.For<IEmailGeneratorFactory>().ImplementedBy<EmailGeneratorFactory>().LifestyleSingleton());
             container.Register(Component.For<IEmailSender>().ImplementedBy<SmtpEmailSender>().LifestyleSingleton());
-            container.Register(Component.For<IPushNotificationService>().ImplementedBy<PushNotificationService>().LifestyleSingleton());
-            container.Register(Component.For<IPushNotificationGenerator>().ImplementedBy<FcmPushNotificationContentGenerator>().LifestyleSingleton());
-            container.Register(Component.For<IPushNotificationSender>().ImplementedBy<FcmPushNotificationSender>().LifestyleSingleton());
         }
     }
 }

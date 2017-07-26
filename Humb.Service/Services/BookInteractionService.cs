@@ -13,15 +13,18 @@ namespace Humb.Service.Services
     public class BookInteractionService : IBookInteractionService
     {
         private readonly IRepository<BookInteraction> _bookInteractionRepository;
-        private readonly IUserService _userService;
-        public BookInteractionService(IUserService userService, IRepository<BookInteraction> bookInteractionRepo)
+        private readonly IRepository<Book> _bookRepository;
+
+        private readonly IRepository<User> _userRepository;
+        public BookInteractionService(IRepository<User> userRepository, IRepository<Book> bookRepository, IRepository<BookInteraction> bookInteractionRepo)
         {
-            this._userService = userService;
-            this._bookInteractionRepository = bookInteractionRepo;
+            _bookInteractionRepository = bookInteractionRepo;
+            _bookRepository = bookRepository;
+            _userRepository = userRepository;
         }
         public bool AddInteraction(Book book, string email, int interactionType)
         {
-            User user = _userService.GetUser(email);
+            User user = _userRepository.FindSingleBy(x => x.Email == email);
             BookInteraction bi = new BookInteraction()
             {
                 Book = book,
@@ -88,14 +91,7 @@ namespace Humb.Service.Services
         {
             return _bookInteractionRepository.FindBy(x => x.UserId == userId && x.InteractionType == interactionType).Count();
         }
-        public int GetBookPopularity(string bookName, DateTime dateTime)
-        {
-            int popularity = 0;
-            popularity += _bookInteractionRepository.FindBy(x => (x.InteractionType == ResponseConstant.INTERACTION_READ_START ||
-            x.InteractionType == ResponseConstant.INTERACTION_READ_STOP) && x.Book.BookName == bookName && x.CreatedAt > dateTime).GroupBy(x => x.UserId).Select(x => x.FirstOrDefault()).Count();
 
-            return popularity;
-        }
         public IEnumerable<BookInteraction> GetBookInteractions(int bookId)
         {
             return _bookInteractionRepository.FindBy(x => x.BookId == bookId);
@@ -119,5 +115,8 @@ namespace Humb.Service.Services
         {
             return _bookInteractionRepository.Any(x => x.BookId == bookId);
         }
+        
+        
+        
     }
 }

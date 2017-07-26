@@ -19,7 +19,7 @@ namespace Humb.Service.Services.InformClient
                 return new FcmPushNotificationContentGenerator(parameters);
             else if (val == InformClientEnums.EmailVerifiedRequest)
                 return new BasicFcmContentGenerator(parameters);
-            else if (val == InformClientEnums.MessageRecievedRequest)
+            else if (val == InformClientEnums.SendMessageRequest)
                 return new FcmMessageContentGenerator(parameters);
             else if (val == InformClientEnums.UpdateMessageStateRequest)
                 return new FcmUpdateMessageStateContentGenerator(parameters);

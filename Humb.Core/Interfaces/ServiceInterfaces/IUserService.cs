@@ -33,7 +33,7 @@ namespace Humb.Core.Interfaces.ServiceInterfaces
         void ReportUser(int fromUserID, int toUserID, int reportCode, string reportInfo);
         void ResendEmailVerification(string email);
         void SendEmail(string email, string nameSurname, string verificationHash);
-        double GetDistanceBetweenTwoUsers(double lat1, double lat2, double lon1, double lon2);
+        double GetDistanceBetweenTwoUsers(double? lat1, double? lat2, double? lon1, double? lon2);
         void UpdateUserLocation(string email, double latidue, double longitude);
         void UpdateUserName(string email, string name);
         void UpdateUserBio(string email, string bio);

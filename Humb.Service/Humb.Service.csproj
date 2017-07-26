@@ -64,6 +64,7 @@
     <Compile Include="Services\BookTransactionService.cs" />
     <Compile Include="Services\EmailService\VerificationEmailContentGenerator.cs" />
     <Compile Include="Services\FeedbackService.cs" />
+    <Compile Include="Services\HomepageService.cs" />
     <Compile Include="Services\InformClient\FcmService\FcmContentGeneratorFactory.cs" />
     <Compile Include="Services\InformClient\FcmService\FcmMessageContentGenerator.cs" />
     <Compile Include="Services\InformClient\FcmService\FcmUpdateMessageStateContentGenerator.cs" />

@@ -18,9 +18,9 @@ namespace Humb.Core.DTOs
         public string CreatedAt { get; set; }
         public UserDTO Owner { get; set; }
         public UserDTO AddedBy { get; set; }
-        public IList<BookInteractionDTO> BookInteractions { get; set; }
-        public IList<BookRequestDTO> BookRequests { get; set; }
-        public IList<BookTransactionDTO> BookTransactions { get; set; }
+        public IEnumerable<BookInteractionDTO> BookInteractions { get; set; }
+        public IEnumerable<BookRequestDTO> BookRequests { get; set; }
+        public IEnumerable<BookTransactionDTO> BookTransactions { get; set; }
     }
 
     public class BookTransactionDTO

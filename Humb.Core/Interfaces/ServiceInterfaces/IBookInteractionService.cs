@@ -16,7 +16,6 @@ namespace Humb.Core.Interfaces.ServiceInterfaces
         int GetUserInteractionCountWithType(int userId, int interactionType);
         int GetUserInteractionCountWithTypeDistinct(int userId, int interactionType);
         bool CanAddInteraction(int interactionType, int bookState);
-        int GetBookPopularity(string bookName, DateTime dateTime);
         IEnumerable<Book> GetUserBooksOnHand(int userId);
         IEnumerable<Book> GetUserReadBooks(int userId);
         bool IsBookInteractionExist(int bookId);
