@@ -189,7 +189,7 @@ namespace Humb.Service.Services
 
             foreach (var request in bookSentRequests)
             {
-                if (request.RequestType != ResponseConstant.REQUEST_SENT || _userService.GetUserBookCounter(request.RequestingUserId) > 0)
+                if (request.RequestType != ResponseConstant.REQUEST_SENT || _bookTransactionService.GetUserBookCounter(request.RequestingUserId) > 0)
                 {
                     returnRequests.Add(EasyMapper.Map<BookRequestDTO>(request));
                 }                

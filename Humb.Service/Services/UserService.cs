@@ -17,19 +17,13 @@ namespace Humb.Service.Services
     public class UserService : IUserService
     {
         private readonly IRepository<User> _userRepository;
-        private readonly IRepository<Book> _bookRepository;
         private readonly IRepository<BlockUser> _blockedUsersRepository;
         private readonly IRepository<ReportUser> _reportedUsersRepository;
-        private readonly IRepository<ForgottenPassword> _forgottenPasswordsRepository;
-        private readonly IBookTransactionService _bookTransactionService;
-        private readonly IBookInteractionService _bookInteractionService;
+        private readonly IRepository<ForgottenPassword> _forgottenPasswordsRepository;        
         private readonly IEmailService _emailService;
-        public UserService(IBookTransactionService bookTransactionService, IBookInteractionService bookInteractionService, IRepository<Book> bookRepository, IRepository<User> userRepo, IRepository<Book> bookRepo, IRepository<BlockUser> blockUserRepo, IRepository<ForgottenPassword> forgottenPasswordsRepo
+        public UserService(IBookInteractionService bookInteractionService, IRepository<User> userRepo, IRepository<Book> bookRepo, IRepository<BlockUser> blockUserRepo, IRepository<ForgottenPassword> forgottenPasswordsRepo
             , IRepository<ReportUser> reportedUsersRepo, IEmailService emailService)
         {
-            _bookTransactionService = bookTransactionService;
-            _bookInteractionService = bookInteractionService;
-            _bookRepository = bookRepository;
             _userRepository = userRepo;
             _blockedUsersRepository = blockUserRepo;
             _reportedUsersRepository = reportedUsersRepo;
@@ -114,14 +108,13 @@ namespace Humb.Service.Services
             return _userRepository.Any(x => x.Email == email && (x.Latitude != null && x.Longitude != null));
         }
 
-        public double GetDistanceBetweenTwoUsers(double? lat1, double? lat2, double? lon1, double? lon2)
+        public double[] GetUserLocation(int userId)
         {
-            var p = 0.017453292519943295;    // Math.PI / 180
-            var a = 0.5 - Math.Cos((lat2.Value - lat1.Value) * p) / 2 +
-                    Math.Cos(lat1.Value * p) * Math.Cos(lat2.Value * p) *
-                    (1 - Math.Cos((lon2.Value - lon1.Value) * p)) / 2;
+            User user = GetUser(userId);
+            if (user.Latitude != null && user.Longitude != null)
+                return new double[] { user.Latitude.Value, user.Longitude.Value };
 
-            return 12742 * Math.Asin(Math.Sqrt(a));
+            return null;
         }
 
         public User GetUser(string email)
@@ -139,36 +132,20 @@ namespace Humb.Service.Services
             return EasyMapper.Map<UserDTO>(GetUser(userId));
         }
 
-        public int GetUserBookCounter(int userId)
-        {
-            int counter = 100;
-            counter += _bookTransactionService.GetGiverUserTransactionCount(userId, ResponseConstant.TRANSACTION_DISPATCH);
-            counter -= _bookTransactionService.GetTakerUserTransactionCount(userId, ResponseConstant.TRANSACTION_DISPATCH);
-            
-            //Dispatch olduğunda puan direk artırıldığı için kitabı kaybeden giverdan önce verilen puan alınır ardından bir puan daha düşürülür, takerdan puan dispatchte düşürüldüğü için puanına dokunulmaz.
-            counter -= 2 * _bookTransactionService.GetGiverUserTransactionCount(userId, ResponseConstant.TRANSACTION_LOST);
-            return counter;
-        }
+        
 
         public string GetFcmToken(int userId)
         {
             return _userRepository.GetById(userId).FcmToken;
         }
 
-        public int GetUserGivenBookCount(int userId)
-        {
-            return _bookTransactionService.GetGiverUserTransactionCount(userId, ResponseConstant.TRANSACTION_COME_TO_HAND);
-        }
+        
 
         public int GetUserId(string email)
         {
             return _userRepository.FindSingleBy(x => x.Email == email).Id;
         }
-        public User GetBookOwner(int bookId)
-        {
-            int ownerId = _bookRepository.FindSingleBy(x=>x.Id == bookId).OwnerId;
-            return _userRepository.FindSingleBy(x => x.Id == ownerId);
-        }
+        
         public string GetUserProfilePictureThumbnailUrl(string email)
         {
             return _userRepository.FindSingleBy(x => x.Email == email).ProfilePictureThumbnailUrl;
@@ -179,18 +156,7 @@ namespace Humb.Service.Services
             return _userRepository.FindSingleBy(x => x.Email == email).ProfilePictureUrl;
         }
 
-        public int GetUserProfilePoint(int userId)
-        {
-            int point = 0;
-            point += _bookInteractionService.GetUserInteractionCountWithType(userId, ResponseConstant.INTERACTION_ADD) * 2;
-            point += _bookInteractionService.GetUserInteractionCountWithTypeDistinct(userId, ResponseConstant.INTERACTION_READ_STOP);
-            point += _bookTransactionService.GetGiverUserTransactionCount(userId, ResponseConstant.TRANSACTION_COME_TO_HAND) * 5;
-            point += _bookTransactionService.GetTakerUserTransactionCount(userId, ResponseConstant.TRANSACTION_COME_TO_HAND) * 3;
-
-            point -= _bookTransactionService.GetGiverUserTransactionCount(userId, ResponseConstant.TRANSACTION_LOST) * 10;
-            point -= _bookTransactionService.GetTakerUserTransactionCount(userId, ResponseConstant.TRANSACTION_LOST) * 10;
-            return point;
-        }
+        
 
         public bool IsUserBlocked(int fromUserId, int toUserId)
         {
@@ -247,7 +213,6 @@ namespace Humb.Service.Services
             user.Longitude = longitude;
             _userRepository.Update(user, user.Id);
         }
-
         public void UpdateUserName(string email, string name)
         {
             User user = GetUser(email);

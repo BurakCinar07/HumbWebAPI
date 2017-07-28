@@ -20,8 +20,7 @@ namespace Humb.Core.Interfaces.ServiceInterfaces
         User GetUser(int userId);
         UserDTO GetUserDTO(int userId);
         string GetFcmToken(int userId);
-        int GetUserBookCounter(int userId);
-        int GetUserProfilePoint(int userId);
+        double[] GetUserLocation(int userId);
         string GetUserProfilePictureUrl(string email);
         string GetUserProfilePictureThumbnailUrl(string email);
         bool IsUserVerified(string email);
@@ -33,12 +32,10 @@ namespace Humb.Core.Interfaces.ServiceInterfaces
         void ReportUser(int fromUserID, int toUserID, int reportCode, string reportInfo);
         void ResendEmailVerification(string email);
         void SendEmail(string email, string nameSurname, string verificationHash);
-        double GetDistanceBetweenTwoUsers(double? lat1, double? lat2, double? lon1, double? lon2);
         void UpdateUserLocation(string email, double latidue, double longitude);
         void UpdateUserName(string email, string name);
         void UpdateUserBio(string email, string bio);
         string ChangePassword(string email, string password);
         void ForgotPasswordRequest(string email);
-        int GetUserGivenBookCount(int userId);
     }
 }

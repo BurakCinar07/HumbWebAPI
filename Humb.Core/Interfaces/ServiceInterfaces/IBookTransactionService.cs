@@ -12,6 +12,7 @@ namespace Humb.Core.Interfaces.ServiceInterfaces
         int GetUserTakenBookTransactionCount(int takerUserId, int bookId, int transactionType);
         int GetTakerUserTransactionCount(int takerUserId, int transactionType);
         int GetGiverUserTransactionCount(int giverUserId, int transactionType);
+        int GetUserBookCounter(int userId);
         void UpdateBookTransaction(BookTransaction bookTransaction);
         IEnumerable<Book> GetUserOnRoadBooks(int userId);
     }

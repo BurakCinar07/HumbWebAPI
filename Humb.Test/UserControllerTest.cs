@@ -26,13 +26,14 @@ namespace Humb.Test
         public IRepository<BlockUser> _blockedUsersRepository;
         public IRepository<BookInteraction> _bookInteractionRepository;
         public IRepository<BookTransaction> _bookTransactionRepository;
+        public IRepository<ReportUser> _reportUserRepository;
 
         public IRepository<ForgottenPassword> _passwordRepository;
 
         private IUserService us;
+        private IBookService bs;
         private IBookInteractionService bis;
         private IBookTransactionService bts;
-
         List<User> users;
         List<Book> books;
 
@@ -87,6 +88,8 @@ namespace Humb.Test
             _userRepository = mockUser.Object;
             Mock<IRepository<BlockUser>> mockBlock = new Mock<IRepository<BlockUser>>();
             _blockedUsersRepository = mockBlock.Object;
+            Mock<IRepository<ReportUser>> mockReport = new Mock<IRepository<ReportUser>>();
+            _reportUserRepository = mockReport.Object;
             Mock<IRepository<ForgottenPassword>> mockPassword = new Mock<IRepository<ForgottenPassword>>();
             _passwordRepository = mockPassword.Object;
             Mock<IRepository<BookInteraction>> mockInteractions = new Mock<IRepository<BookInteraction>>();
@@ -103,9 +106,9 @@ namespace Humb.Test
             Mock<IRepository<Book>> mockBook = new Mock<IRepository<Book>>();
             _bookRepository = mockBook.Object;
             Mock<IRepository<ReportBook>> mockBookReport = new Mock<IRepository<ReportBook>>();
+            //us = new UserService(bis, mockUser.Object, mockBook.Object, mockBlock.Object, mockPassword.Object, _reportUserRepository, new EmailService(new EmailGeneratorFactory(), new SmtpEmailSender()));
 
-            bis = new BookInteractionService(mockUser.Object, mockBook.Object, mockInteractions.Object);
-            //us = new UserService(bts, bis, new BookService(mockBook.Object, mockBookReport.Object));
+            //bs = new BookService(mockBook);
         }
         //[Test]
         public void ValueNullTest()

@@ -10,7 +10,7 @@ namespace Humb.Core.Interfaces.ServiceInterfaces
 {
     public interface IBookService
     {
-        int CreateBook(string email, string path, string thumbnailPath, string bookName, string author, int bookState, int genreCode);
+        int CreateBook(int userId, string path, string thumbnailPath, string bookName, string author, int bookState, int genreCode);
         Book GetBook(int Id);
         bool IsBookAddedByUser(int bookId, int userId);
         int GetBookState(int bookId);

@@ -96,4 +96,20 @@ namespace Humb.Service.Helpers
             return new string(chars);
         }
     }
+    public static class MathHelper
+    {
+        public static double GetDistanceBetweenTwoUsers(double? lat1, double? lat2, double? lon1, double? lon2)
+        {
+            if (!lat2.HasValue && !lon2.HasValue)
+            {
+                return 999;
+            }
+            var p = 0.017453292519943295;    // Math.PI / 180
+            var a = 0.5 - Math.Cos((lat2.Value - lat1.Value) * p) / 2 +
+                    Math.Cos(lat1.Value * p) * Math.Cos(lat2.Value * p) *
+                    (1 - Math.Cos((lon2.Value - lon1.Value) * p)) / 2;
+
+            return 12742 * Math.Asin(Math.Sqrt(a));
+        }
+    }
 }

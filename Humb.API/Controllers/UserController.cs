@@ -25,7 +25,7 @@ namespace Humb.API.Controllers
 
         [HttpGet]
         public string RegisterUser()
-        {
+        {            
             _userService.CreateUser("bab", "asdfasdf", "dsafsdgsdf");
             return null;
         }

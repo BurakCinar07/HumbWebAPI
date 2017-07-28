@@ -14,13 +14,16 @@ namespace Humb.Service.Services
     {
         private readonly IRepository<BookInteraction> _bookInteractionRepository;
         private readonly IRepository<Book> _bookRepository;
-
+        private readonly IBookService _bookService;
+        private readonly IBookTransactionService _bookTransactionService;
         private readonly IRepository<User> _userRepository;
-        public BookInteractionService(IRepository<User> userRepository, IRepository<Book> bookRepository, IRepository<BookInteraction> bookInteractionRepo)
+        public BookInteractionService(IBookService bookService, IBookTransactionService bookTransactionService, IRepository<User> userRepository, IRepository<Book> bookRepository, IRepository<BookInteraction> bookInteractionRepo)
         {
+            _bookService = bookService;
             _bookInteractionRepository = bookInteractionRepo;
             _bookRepository = bookRepository;
             _userRepository = userRepository;
+            _bookTransactionService = bookTransactionService;
         }
         public bool AddInteraction(Book book, string email, int interactionType)
         {
@@ -115,8 +118,55 @@ namespace Humb.Service.Services
         {
             return _bookInteractionRepository.Any(x => x.BookId == bookId);
         }
-        
-        
-        
+        public int GetBookPopularity(string bookName, DateTime dateTime)
+        {
+            int popularity = 0;
+            popularity += _bookInteractionRepository.FindBy(x => (x.InteractionType == ResponseConstant.INTERACTION_READ_START ||
+            x.InteractionType == ResponseConstant.INTERACTION_READ_STOP) && x.Book.BookName == bookName && x.CreatedAt > dateTime).GroupBy(x => x.UserId).Select(x => x.FirstOrDefault()).Count();
+
+            return popularity;
+        }
+        public IEnumerable<Book> GetPopularBooks(User user)
+        {
+            List<Book> returnBooks = new List<Book>();
+            Dictionary<string, int> bookPopularities = new Dictionary<string, int>();
+            int days = -14;
+            DateTime dateTime = DateTime.Now.AddDays(days);
+            var bookInteractions = _bookInteractionRepository.FindBy(x => x.CreatedAt > dateTime).GroupBy(x => x.Book.BookName).
+                    Select(y => y.FirstOrDefault()).Select(i => new { i.Book.BookName });
+
+            //Son 2 hafta içinde 5 tane kitap bulamazsa 2 hafta daha geriden bakar
+            while (bookInteractions.Count() < ResponseConstant.POPULAR_BOOKS_COUNT && days > -42)
+            {
+                days -= 14;
+                dateTime = dateTime.AddDays(days);
+                bookInteractions = _bookInteractionRepository.FindBy(x => x.CreatedAt > dateTime && x.UserId != user.Id).GroupBy(x => x.Book.BookName).
+                    Select(y => y.FirstOrDefault()).Select(i => new { i.Book.BookName });
+            }
+
+            //Kitapları isimlerine göre gruplar populerliklerine göre sıralar ilk 5 i döndürür.
+            foreach (var interaction in bookInteractions)
+            {
+                bookPopularities.Add(interaction.BookName, GetBookPopularity(interaction.BookName, dateTime));
+            }
+            var sortedBookPopularities = bookPopularities.OrderByDescending(x => x.Value).Take(5);
+            foreach (var entry in sortedBookPopularities)
+            {
+                returnBooks.Add(_bookService.GetRandomBookByBookName(entry.Key));
+            }
+            return returnBooks;
+        }
+        public int GetUserProfilePoint(int userId)
+        {
+            int point = 0;
+            point += GetUserInteractionCountWithType(userId, ResponseConstant.INTERACTION_ADD) * 2;
+            point += GetUserInteractionCountWithTypeDistinct(userId, ResponseConstant.INTERACTION_READ_STOP);
+            point += _bookTransactionService.GetGiverUserTransactionCount(userId, ResponseConstant.TRANSACTION_COME_TO_HAND) * 5;
+            point += _bookTransactionService.GetTakerUserTransactionCount(userId, ResponseConstant.TRANSACTION_COME_TO_HAND) * 3;
+
+            point -= _bookTransactionService.GetGiverUserTransactionCount(userId, ResponseConstant.TRANSACTION_LOST) * 10;
+            point -= _bookTransactionService.GetTakerUserTransactionCount(userId, ResponseConstant.TRANSACTION_LOST) * 10;
+            return point;
+        }
     }
 }

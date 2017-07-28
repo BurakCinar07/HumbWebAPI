@@ -74,5 +74,20 @@ namespace Humb.Service.Services
         {
             _bookTransactionRepository.Update(transaction, transaction.Id);
         }
+        public int GetUserBookCounter(int userId)
+        {
+            int counter = 100;
+            counter += GetGiverUserTransactionCount(userId, ResponseConstant.TRANSACTION_DISPATCH);
+            counter -= GetTakerUserTransactionCount(userId, ResponseConstant.TRANSACTION_DISPATCH);
+
+            //Dispatch olduğunda puan direk artırıldığı için kitabı kaybeden giverdan önce verilen puan alınır ardından bir puan daha düşürülür, takerdan puan dispatchte düşürüldüğü için puanına dokunulmaz.
+            counter -= 2 * GetGiverUserTransactionCount(userId, ResponseConstant.TRANSACTION_LOST);
+            return counter;
+        }
+        public int GetUserGivenBookCount(int userId)
+        {
+            return GetGiverUserTransactionCount(userId, ResponseConstant.TRANSACTION_COME_TO_HAND);
+        }
+
     }
 }

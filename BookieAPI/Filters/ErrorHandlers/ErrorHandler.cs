@@ -128,8 +128,7 @@ namespace BookieAPI.Filters.ErrorHandlers
                         InfiltratorUtils.AddInfiltrator(context, InfiltratorConstant.ERROR_EMAIL_NOT_VALID, "The given email is not valid");
                         errorCode = InfiltratorConstant.ERROR_INJECTION;
                     }
-                }
-               
+                }               
                 return this;
             }
 

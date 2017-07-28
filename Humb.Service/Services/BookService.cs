@@ -18,16 +18,13 @@ namespace Humb.Service.Services
         private readonly IRepository<Book> _bookRepository;
         private readonly IRepository<ReportBook> _reportedBookRepository;
         private readonly IUserService _userService;
-        private readonly IBookInteractionService _bookInteractionService;
         private readonly IBookTransactionService _bookTransactionService;
         private readonly IInformClientService _informClientService;
-        public BookService(IRepository<Book> bookRepo, IRepository<ReportBook> reportedBookRepo, IUserService userService, 
-            IBookInteractionService bookInteractionService, IInformClientService informClientService, IBookTransactionService bookTransactionService)
+        public BookService(IRepository<Book> bookRepo, IRepository<ReportBook> reportedBookRepo, IUserService userService, IInformClientService informClientService, IBookTransactionService bookTransactionService)
         {
             _bookRepository = bookRepo;
             _reportedBookRepository = reportedBookRepo;
             _userService = userService;
-            _bookInteractionService = bookInteractionService;
             _bookTransactionService = bookTransactionService;
             _informClientService = informClientService;
         }
@@ -36,9 +33,8 @@ namespace Humb.Service.Services
             return _bookRepository.Any(x => x.Id == bookID && x.AddedById == userID);
         }
 
-        public int CreateBook(string email, string path, string thumbnailPath, string bookName, string author, int bookState, int genreCode)
+        public int CreateBook(int userId, string path, string thumbnailPath, string bookName, string author, int bookState, int genreCode)
         {
-            int userId = _userService.GetUserId(email);
             Book book = new Book()
             {
                 BookName = bookName.Replace('_', ' '),
@@ -51,8 +47,10 @@ namespace Humb.Service.Services
                 BookPictureUrl = ResponseConstant.IMAGE_URL + "BookPictures/" + path,
                 BookPictureThumbnailUrl = ResponseConstant.IMAGE_URL + "BookPicturesThumbnails/" + thumbnailPath,
             };
-            _bookRepository.Insert(book);            
-            _bookInteractionService.AddInteraction(book, email, TypeConverter.BookStateToInteractionType(bookState));
+            _bookRepository.Insert(book);
+
+            //TODO : THROW AN EVENT AND LET BOOK INTERACTION SERVICE CATCH THAT TO ADD INTERACTION.
+            //_bookInteractionService.AddInteraction(book, email, TypeConverter.BookStateToInteractionType(bookState));
             return book.Id;
         }
 
@@ -84,7 +82,7 @@ namespace Humb.Service.Services
         public string GetBookPictureUrl(int bookId)
         {
             return _bookRepository.FindSingleBy(x => x.Id == bookId).BookPictureUrl;
-        }        
+        }
 
         public IEnumerable<Book> GetBooksByLovedGenres(ICollection<LovedGenre> lovedGenres)
         {
@@ -118,11 +116,12 @@ namespace Humb.Service.Services
         public bool SetBookStateLost(string email, int bookId)
         {
             Book book = GetBook(bookId);
-            User user = _userService.GetUser(email); 
-            if(book.BookState == ResponseConstant.STATE_ON_ROAD && book.OwnerId == user.Id)
+            User user = _userService.GetUser(email);
+            if (book.BookState == ResponseConstant.STATE_ON_ROAD && book.OwnerId == user.Id)
             {
                 book.BookState = ResponseConstant.STATE_LOST;
                 _bookRepository.Update(book, bookId);
+                //TODO : THROW AN EVENT AND LET BTS CATCH THAT EVENT TO UPDATE THE OBJECT
                 BookTransaction bt = _bookTransactionService.GetBookLastTransactionWithGiverUserId(book.Id, user.Id);
                 bt.TransactionType = ResponseConstant.TRANSACTION_LOST;
                 _bookTransactionService.UpdateBookTransaction(bt);
@@ -168,11 +167,221 @@ namespace Humb.Service.Services
             return _bookRepository.FindBy(x => x.BookState == ResponseConstant.STATE_READING && x.OwnerId == userId);
         }
 
+        #region Homepage methods
+        public IEnumerable<Book> GetFirstViewedBookList(User user)
+        {
+            List<Book> returnBooks = new List<Book>();
+            IEnumerable<Book> lovedGenreBooks;
+
+            #region If user's location is null
+            if (user.Latitude == null || user.Longitude == null)
+            {
+                if (user.LovedGenres.Count > 0)
+                {
+                    lovedGenreBooks = GetBooksByLovedGenres(user.LovedGenres);
+                    foreach (var book in lovedGenreBooks.OrderBy(x => Guid.NewGuid()).Take(ResponseConstant.HOMEPAGE_BOOK_LIST_COUNT))
+                    {
+                        returnBooks.Add(book);
+                    }
+                }
+            }
+            #endregion
+            #region If user's location isnt null
+            else
+            {
+                //Userın loved genre sayısı 0 dan büyükse 
+                if (user.LovedGenres.Count > 0)
+                {
+                    //Userın loved genrelarındaki kitapları çeker
+                    lovedGenreBooks = GetBooksByLovedGenres(user.LovedGenres);
+                    User tempUser;
+                    //Kitap sayısı 20 den fazlaysa kitabın ownerı ile user arasındaki mesafeye bakar rastgele 20 kitap döndürür.
+                    foreach (var book in lovedGenreBooks.OrderBy(x => Guid.NewGuid()).Take(ResponseConstant.HOMEPAGE_BOOK_LIST_COUNT))
+                    {
+                        tempUser = _userService.GetUser(book.OwnerId);
+                        if (MathHelper.GetDistanceBetweenTwoUsers(user.Latitude, tempUser.Latitude, user.Longitude, tempUser.Longitude) < ResponseConstant.MAX_DISTANCE)
+                        {
+                            returnBooks.Add(book);
+                        }
+                    }
+                }
+                //Konum kısıtlamasından dolayı 20 den az kitap filtrelenmişse kalanları konuma göre random atar.                
+                if (returnBooks.Count < ResponseConstant.HOMEPAGE_BOOK_LIST_COUNT)
+                {
+                    FillListWithRandomBooksByUsersDistances(user.Id, user.Latitude.Value, user.Longitude.Value, returnBooks);
+                }
+
+            }
+            #endregion
+
+            //20 i doldurmazsa konumdan bağımsız rasgele kitap atar.
+            if (returnBooks.Count < ResponseConstant.HOMEPAGE_BOOK_LIST_COUNT)
+            {
+                FillListWithRandomBooks(user.Id, returnBooks);
+            }
+            //Dönecek kitapların sırasını değiştirir sürekli aynı kitaplar dönmesin diye.
+            return returnBooks.OrderBy(x => Guid.NewGuid());
+        }
+        public IEnumerable<Book> GetScrolledBookList(User user, int[] bookIds)
+        {
+            List<Book> returnBooks = new List<Book>();            
+
+            IEnumerable<Book> lovedGenreBooks;
+            var availableBooksIds = _bookRepository.FindBy(x => x.OwnerId != user.Id &&
+            (x.BookState == ResponseConstant.STATE_OPENED_TO_SHARE || x.BookState == ResponseConstant.STATE_READING)).
+            Select(y => y.Id).Except(bookIds);
+            #region If user's location is null
+            if (user.Latitude == null || user.Longitude == null)
+            {
+                if (user.LovedGenres.Count > 0)
+                {
+                    returnBooks.AddRange(GetBooksByLovedGenres(user.LovedGenres).TakeWhile(x => !bookIds.Contains(x.Id))
+                        .OrderBy(x=> Guid.NewGuid()).Take(ResponseConstant.HOMEPAGE_BOOK_LIST_COUNT));
+                }
+            }
+            #endregion
+            #region If user's location isnt null
+            else
+            {
+                //Userın loved genre sayısı 0 dan büyükse                 
+                if (user.LovedGenres.Count > 0)
+                {
+                    //Userın loved genrelarındaki kitapları çeker
+                    lovedGenreBooks = GetBooksByLovedGenres(user.LovedGenres);
+                    User tempUser;
+                    //Kitap sayısı 20 den fazlaysa kitabın ownerı ile user arasındaki mesafeye bakar rastgele 20 kitap döndürür.
+                    foreach (var book in lovedGenreBooks.TakeWhile(x=> !bookIds.Contains(x.Id)).OrderBy(x => Guid.NewGuid()))
+                    {
+                        tempUser = _userService.GetUser(book.OwnerId);
+                        if (MathHelper.GetDistanceBetweenTwoUsers(user.Latitude, tempUser.Latitude, user.Longitude, tempUser.Longitude) < ResponseConstant.MAX_DISTANCE)
+                        {
+                            returnBooks.Add(book);
+                        }
+                    }
+                }
+                //Konum kısıtlamasından dolayı 20 den az kitap filtrelenmişse kalanları konuma göre random atar.                
+                if (returnBooks.Count < ResponseConstant.HOMEPAGE_BOOK_LIST_COUNT)
+                {
+                    FillScrolledListWithRandomBooksByUserDistances(user.Id, user.Latitude.Value, user.Longitude.Value, returnBooks, availableBooksIds);
+                }
+
+            }
+            #endregion
+            //20 i doldurmazsa konumdan bağımsız rasgele kitap atar.
+            if (returnBooks.Count < ResponseConstant.HOMEPAGE_BOOK_LIST_COUNT)
+            {
+                FillListWithRandomBooks(user.Id, returnBooks);
+            }
+            //Dönecek kitapların sırasını değiştirir sürekli aynı kitaplar dönmesin diye.
+            return returnBooks.OrderBy(x => Guid.NewGuid()).Take(ResponseConstant.HOMEPAGE_BOOK_LIST_COUNT);
+        }
+
         public Book GetRandomBookByBookName(string bookName)
         {
             return _bookRepository.FindBy(x => x.BookName == bookName && x.BookState != ResponseConstant.STATE_LOST && x.BookState != ResponseConstant.STATE_ON_ROAD).OrderBy(x => Guid.NewGuid()).FirstOrDefault();
         }
-        
-
+        public void FillListWithRandomBooks(int userId, List<Book> returnBooks)
+        {
+            var availableBookIds = _bookRepository.FindBy(x => x.OwnerId != userId &&
+            (x.BookState == ResponseConstant.STATE_OPENED_TO_SHARE || x.BookState == ResponseConstant.STATE_READING)).
+            Select(x => x.Id);
+            if (returnBooks.Count > 0)
+            {
+                var existingBookIds = returnBooks.Select(x => x.Id);
+                availableBookIds = availableBookIds.Except(existingBookIds);
+            }
+            Random random = new Random();
+            int availableBookCount = availableBookIds.Count();
+            if (availableBookCount > 0)
+            {
+                availableBookIds = availableBookIds.OrderBy(x => Guid.NewGuid());
+                while (returnBooks.Count < ResponseConstant.HOMEPAGE_BOOK_LIST_COUNT && availableBookCount > 0)
+                {
+                    returnBooks.Add(_bookRepository.GetById(availableBookIds.ElementAt(availableBookCount)));
+                    availableBookCount--;
+                }
+            }
+        }
+        private void FillListWithRandomBooksByUsersDistances(int userId, double latitude, double longitude, List<Book> returnBooks)
+        {
+            var bookIds = _bookRepository.FindBy(x => x.OwnerId != userId &&
+            (x.BookState == ResponseConstant.STATE_OPENED_TO_SHARE || x.BookState == ResponseConstant.STATE_READING)).
+            Select(x => x.Id);
+            List<int> availableBookIds;
+            if (returnBooks.Count > 0)
+            {
+                var existingBookIds = returnBooks.Select(x => x.Id);
+                availableBookIds = bookIds.Except(existingBookIds).ToList();
+                int i = availableBookIds.Count();
+                while (i >= 0)
+                {
+                    double[] tempUserLatLong = _userService.GetUserLocation(GetBookOwnerId(availableBookIds.ElementAt(i)));
+                    if (MathHelper.GetDistanceBetweenTwoUsers(latitude, tempUserLatLong[0], longitude, tempUserLatLong[1]) > ResponseConstant.MAX_DISTANCE)
+                    {
+                        availableBookIds.RemoveAt(i);
+                    }
+                    i--;
+                }
+                Random random = new Random();
+                int availableBookCount = availableBookIds.Count;
+                if (availableBookCount > 0)
+                {
+                    availableBookIds = availableBookIds.OrderBy(x => Guid.NewGuid()).ToList();
+                    while (returnBooks.Count < ResponseConstant.HOMEPAGE_BOOK_LIST_COUNT && availableBookCount >= 0)
+                    {
+                        returnBooks.Add(_bookRepository.GetById(availableBookIds.ElementAt(availableBookCount)));
+                        availableBookCount--;
+                    }
+                }
+            }
+        }
+        public void FillScrolledListWithRandomBooks(int userId, List<Book> returnBooks, IQueryable<int> availableBookIds)
+        {
+            if (returnBooks.Count > 0)
+            {
+                availableBookIds = availableBookIds.Except(returnBooks.Select(x => x.Id));
+            }
+            Random random = new Random();
+            int availableBookCount = availableBookIds.Count();
+            if (availableBookCount > 0)
+            {
+                availableBookIds = availableBookIds.OrderBy(x => Guid.NewGuid());
+                while (returnBooks.Count < ResponseConstant.HOMEPAGE_BOOK_LIST_COUNT && availableBookCount > 0)
+                {
+                    returnBooks.Add(_bookRepository.GetById(availableBookIds.ElementAt(availableBookCount)));
+                    availableBookCount--;
+                }
+            }
+        }
+        public void FillScrolledListWithRandomBooksByUserDistances(int userId, double latitude, double longitude, List<Book> returnBooks, IQueryable<int> bookIds)
+        {
+            List<int> availableBookIds;
+            if (returnBooks.Count > 0)
+            {
+                availableBookIds = bookIds.Except(returnBooks.Select(x => x.Id)).ToList();
+                int i = availableBookIds.Count();
+                while (i >= 0)
+                {
+                    double[] tempUserLatLong = _userService.GetUserLocation(GetBookOwnerId(availableBookIds.ElementAt(i)));
+                    if (MathHelper.GetDistanceBetweenTwoUsers(latitude, tempUserLatLong[0], longitude, tempUserLatLong[1]) > ResponseConstant.MAX_DISTANCE)
+                    {
+                        availableBookIds.RemoveAt(i);
+                    }
+                    i--;
+                }
+                Random random = new Random();
+                int availableBookCount = availableBookIds.Count;
+                if (availableBookCount > 0)
+                {
+                    availableBookIds = availableBookIds.OrderBy(x => Guid.NewGuid()).ToList();
+                    while (returnBooks.Count < ResponseConstant.HOMEPAGE_BOOK_LIST_COUNT && availableBookCount >= 0)
+                    {
+                        returnBooks.Add(_bookRepository.GetById(availableBookIds.ElementAt(availableBookCount)));
+                        availableBookCount--;
+                    }
+                }
+            }
+        }
+        #endregion
     }
 }
