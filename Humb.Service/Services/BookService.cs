@@ -312,7 +312,7 @@ namespace Humb.Service.Services
             {
                 var existingBookIds = returnBooks.Select(x => x.Id);
                 availableBookIds = bookIds.Except(existingBookIds).ToList();
-                int i = availableBookIds.Count();
+                int i = availableBookIds.Count() - 1;
                 while (i >= 0)
                 {
                     double[] tempUserLatLong = _userService.GetUserLocation(GetBookOwnerId(availableBookIds.ElementAt(i)));

@@ -71,6 +71,8 @@
     <Compile Include="Entities\ReportBook.cs" />
     <Compile Include="Entities\ReportUser.cs" />
     <Compile Include="Entities\User.cs" />
+    <Compile Include="Events\EventHub.cs" />
+    <Compile Include="Events\Subscriber.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\Email\IEmailGeneratorFactory.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\IBookRequestService.cs" />
     <Compile Include="Interfaces\ServiceInterfaces\InformClient\IInformClientContentGeneratorFactory.cs" />
