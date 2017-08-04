@@ -31,9 +31,13 @@ namespace Humb.API
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            //Event subscribtions
             EventHub.Subscribe<BookAdded>(_container.Resolve<IBookInteractionService>().BookAddedListener);
+            EventHub.Subscribe<BookStateSetLost>(_container.Resolve<IBookTransactionService>().BookStateSetLostListener);
         }
-        public static void ConfigureWindsor(HttpConfiguration configuration)
+
+        private static void ConfigureWindsor(HttpConfiguration configuration)
         {
             _container = new WindsorContainer();
             _container.Install(FromAssembly.This());

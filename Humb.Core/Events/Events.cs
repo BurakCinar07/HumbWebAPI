@@ -10,7 +10,7 @@ namespace Humb.Core.Events
     {
         public DateTime EventTime { get; protected set; }
 
-        public EventBase()
+        protected EventBase()
         {
             this.EventTime = DateTime.Now;
         }
@@ -34,6 +34,15 @@ namespace Humb.Core.Events
         {
             this.UserId = userId;
             this.InteractionType = interactionType;
+        }
+    }
+
+    public class BookStateSetLost : BookEvent
+    {
+        public int UserId { get; private set; }
+        public BookStateSetLost(int bookId, int userId) : base(bookId)
+        {
+            this.UserId = userId;
         }
     }
 }

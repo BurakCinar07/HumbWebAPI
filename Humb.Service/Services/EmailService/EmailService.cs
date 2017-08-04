@@ -9,6 +9,7 @@ using Humb.Core.Interfaces;
 
 namespace Humb.Service.Services.EmailService
 {
+    //TODO : ThreadPool imp.
     public class EmailService : IEmailService
     {
         private readonly IEmailGeneratorFactory _emailGeneratorFactory;

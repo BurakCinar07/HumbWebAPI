@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Humb.Core.DTOs;
 using Pelusoft.EasyMapper;
 using Humb.Core.Constants;
+using Humb.Core.Events;
 
 namespace Humb.Service.Services
 {
@@ -89,5 +90,11 @@ namespace Humb.Service.Services
             return GetGiverUserTransactionCount(userId, ResponseConstant.TRANSACTION_COME_TO_HAND);
         }
 
+        public void BookStateSetLostListener(BookStateSetLost args)
+        {
+            BookTransaction bt = GetBookLastTransactionWithGiverUserId(args.BookId, args.UserId);
+            bt.TransactionType = ResponseConstant.TRANSACTION_LOST;
+            _bookTransactionRepository.Update(bt, bt.Id);
+        }
     }
 }

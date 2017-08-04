@@ -28,5 +28,7 @@ namespace Humb.Core.Interfaces.ServiceInterfaces
         bool SetBookStateLost(string email, int bookId);
         IEnumerable<Book> GetBooksByLovedGenres(ICollection<LovedGenre> lovedGenres);
         IEnumerable<Book> GetUserCurrentlyReadingBooks(int userId);
+        IEnumerable<Book> GetFirstViewedBookList(User user);
+        IEnumerable<Book> GetScrolledBookList(User user, int[] bookIds);
     }
 }

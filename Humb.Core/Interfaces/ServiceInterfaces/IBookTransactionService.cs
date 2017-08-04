@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Humb.Core.Entities;
+using Humb.Core.Events;
 
 namespace Humb.Core.Interfaces.ServiceInterfaces
 {
@@ -15,5 +16,6 @@ namespace Humb.Core.Interfaces.ServiceInterfaces
         int GetUserBookCounter(int userId);
         void UpdateBookTransaction(BookTransaction bookTransaction);
         IEnumerable<Book> GetUserOnRoadBooks(int userId);
+        void BookStateSetLostListener(BookStateSetLost args);
     }
 }

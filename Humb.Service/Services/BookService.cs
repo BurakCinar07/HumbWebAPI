@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Humb.Core.DTOs;
 using Humb.Core.Entities;
 using Humb.Core.Interfaces.RepositoryInterfaces;
@@ -29,9 +27,9 @@ namespace Humb.Service.Services
             _bookTransactionService = bookTransactionService;
             _informClientService = informClientService;
         }
-        public bool IsBookAddedByUser(int bookID, int userID)
+        public bool IsBookAddedByUser(int bookId, int userId)
         {
-            return _bookRepository.Any(x => x.Id == bookID && x.AddedById == userID);
+            return _bookRepository.Any(x => x.Id == bookId && x.AddedById == userId);
         }
 
         public int CreateBook(int userId, string path, string thumbnailPath, string bookName, string author, int bookState, int genreCode)
@@ -50,8 +48,7 @@ namespace Humb.Service.Services
             };
             _bookRepository.Insert(book);
 
-            //TODO : THROW AN EVENT AND LET BOOK INTERACTION SERVICE CATCH THAT TO ADD INTERACTION.
-            EventHub.Publish<BookAdded>(new BookAdded(book.Id, userId, TypeConverter.BookStateToInteractionType(bookState)));
+            EventHub.Publish(new BookAdded(book.Id, userId, TypeConverter.BookStateToInteractionType(bookState)));
             return book.Id;
         }
 
@@ -96,9 +93,9 @@ namespace Humb.Service.Services
             return returnBooks;
         }
 
-        public int GetBookState(int bookID)
+        public int GetBookState(int bookId)
         {
-            return _bookRepository.FindSingleBy(x => x.Id == bookID).BookState;
+            return _bookRepository.FindSingleBy(x => x.Id == bookId).BookState;
         }
 
         public void ReportBook(int userId, int bookId, int reportCode, string reportInfo)
@@ -118,18 +115,14 @@ namespace Humb.Service.Services
         {
             Book book = GetBook(bookId);
             User user = _userService.GetUser(email);
-            if (book.BookState == ResponseConstant.STATE_ON_ROAD && book.OwnerId == user.Id)
-            {
-                book.BookState = ResponseConstant.STATE_LOST;
-                _bookRepository.Update(book, bookId);
-                //TODO : THROW AN EVENT AND LET BTS CATCH THAT EVENT TO UPDATE THE OBJECT
-                BookTransaction bt = _bookTransactionService.GetBookLastTransactionWithGiverUserId(book.Id, user.Id);
-                bt.TransactionType = ResponseConstant.TRANSACTION_LOST;
-                _bookTransactionService.UpdateBookTransaction(bt);
-                _informClientService.InformClient(InformClientEnums.NotificationRequest, user.FcmToken, _userService.GetFcmToken(bt.TakerUserId), user, book, ResponseConstant.FCM_DATA_TYPE_TRANSACTION_LOST);
-                return true;
-            }
-            return false;
+            if (book.BookState != ResponseConstant.STATE_ON_ROAD || book.OwnerId != user.Id)
+                return false;
+            book.BookState = ResponseConstant.STATE_LOST;
+            _bookRepository.Update(book, bookId);
+            EventHub.Publish(new BookStateSetLost(book.Id, user.Id));
+            //TODO : Let external services to get triggered by events.
+            //_informClientService.InformClient(InformClientEnums.NotificationRequest, user.FcmToken, _userService.GetFcmToken(bt.TakerUserId), user, book, ResponseConstant.FCM_DATA_TYPE_TRANSACTION_LOST);
+            return true;
         }
 
         public void UpdateBookDetails(int bookId, string bookName, string author, int genreCode)
@@ -154,7 +147,7 @@ namespace Humb.Service.Services
             book.BookPictureUrl = ResponseConstant.IMAGE_URL + "BookPictures/" + picturePath;
             book.BookPictureThumbnailUrl = ResponseConstant.IMAGE_URL + "BookPicturesThumbnails/" + thumbnailPath;
             _bookRepository.Update(book, bookId);
-            return new string[] { book.BookPictureUrl, book.BookPictureThumbnailUrl };
+            return new[] { book.BookPictureUrl, book.BookPictureThumbnailUrl };
         }
 
         public void UpdateBookState(int bookId, int bookState)
@@ -195,11 +188,10 @@ namespace Humb.Service.Services
                 {
                     //Userın loved genrelarındaki kitapları çeker
                     lovedGenreBooks = GetBooksByLovedGenres(user.LovedGenres);
-                    User tempUser;
                     //Kitap sayısı 20 den fazlaysa kitabın ownerı ile user arasındaki mesafeye bakar rastgele 20 kitap döndürür.
                     foreach (var book in lovedGenreBooks.OrderBy(x => Guid.NewGuid()).Take(ResponseConstant.HOMEPAGE_BOOK_LIST_COUNT))
                     {
-                        tempUser = _userService.GetUser(book.OwnerId);
+                        var tempUser = _userService.GetUser(book.OwnerId);
                         if (MathHelper.GetDistanceBetweenTwoUsers(user.Latitude, tempUser.Latitude, user.Longitude, tempUser.Longitude) < ResponseConstant.MAX_DISTANCE)
                         {
                             returnBooks.Add(book);
@@ -237,7 +229,7 @@ namespace Humb.Service.Services
                 if (user.LovedGenres.Count > 0)
                 {
                     returnBooks.AddRange(GetBooksByLovedGenres(user.LovedGenres).TakeWhile(x => !bookIds.Contains(x.Id))
-                        .OrderBy(x=> Guid.NewGuid()).Take(ResponseConstant.HOMEPAGE_BOOK_LIST_COUNT));
+                        .OrderBy(x => Guid.NewGuid()).Take(ResponseConstant.HOMEPAGE_BOOK_LIST_COUNT));
                 }
             }
             #endregion
@@ -251,7 +243,7 @@ namespace Humb.Service.Services
                     lovedGenreBooks = GetBooksByLovedGenres(user.LovedGenres);
                     User tempUser;
                     //Kitap sayısı 20 den fazlaysa kitabın ownerı ile user arasındaki mesafeye bakar rastgele 20 kitap döndürür.
-                    foreach (var book in lovedGenreBooks.TakeWhile(x=> !bookIds.Contains(x.Id)).OrderBy(x => Guid.NewGuid()))
+                    foreach (var book in lovedGenreBooks.TakeWhile(x => !bookIds.Contains(x.Id)).OrderBy(x => Guid.NewGuid()))
                     {
                         tempUser = _userService.GetUser(book.OwnerId);
                         if (MathHelper.GetDistanceBetweenTwoUsers(user.Latitude, tempUser.Latitude, user.Longitude, tempUser.Longitude) < ResponseConstant.MAX_DISTANCE)
@@ -291,7 +283,6 @@ namespace Humb.Service.Services
                 var existingBookIds = returnBooks.Select(x => x.Id);
                 availableBookIds = availableBookIds.Except(existingBookIds);
             }
-            Random random = new Random();
             int availableBookCount = availableBookIds.Count();
             if (availableBookCount > 0)
             {
@@ -323,7 +314,6 @@ namespace Humb.Service.Services
                     }
                     i--;
                 }
-                Random random = new Random();
                 int availableBookCount = availableBookIds.Count;
                 if (availableBookCount > 0)
                 {
@@ -333,24 +323,6 @@ namespace Humb.Service.Services
                         returnBooks.Add(_bookRepository.GetById(availableBookIds.ElementAt(availableBookCount)));
                         availableBookCount--;
                     }
-                }
-            }
-        }
-        private void FillScrolledListWithRandomBooks(int userId, List<Book> returnBooks, IQueryable<int> availableBookIds)
-        {
-            if (returnBooks.Count > 0)
-            {
-                availableBookIds = availableBookIds.Except(returnBooks.Select(x => x.Id));
-            }
-            Random random = new Random();
-            int availableBookCount = availableBookIds.Count();
-            if (availableBookCount > 0)
-            {
-                availableBookIds = availableBookIds.OrderBy(x => Guid.NewGuid());
-                while (returnBooks.Count < ResponseConstant.HOMEPAGE_BOOK_LIST_COUNT && availableBookCount > 0)
-                {
-                    returnBooks.Add(_bookRepository.GetById(availableBookIds.ElementAt(availableBookCount)));
-                    availableBookCount--;
                 }
             }
         }
