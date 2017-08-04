@@ -7,9 +7,12 @@ using Humb.Core.Entities;
 using Humb.Core.Interfaces.ServiceInterfaces;
 using Humb.Core.Interfaces.RepositoryInterfaces;
 using Humb.Core.Constants;
+using Humb.Core.Events;
 
 namespace Humb.Service.Services
 {
+   
+
     public class BookInteractionService : IBookInteractionService
     {
         private readonly IRepository<BookInteraction> _bookInteractionRepository;
@@ -25,6 +28,38 @@ namespace Humb.Service.Services
             _userRepository = userRepository;
             _bookTransactionService = bookTransactionService;
         }
+
+        public void BookAddedListener(BookAdded args)
+        {
+            User user = _userRepository.GetById(args.UserId);
+            Book book = _bookRepository.GetById(args.BookId);
+            BookInteraction bi = new BookInteraction()
+            {
+                Book = book,
+                User = user,
+                CreatedAt = DateTime.Now
+            };
+
+            if (!IsBookInteractionExist(book.Id))
+            {
+                bi.InteractionType = ResponseConstant.INTERACTION_ADD;
+            }
+            else if (book.BookState == ResponseConstant.STATE_READING)
+            {
+                bi.InteractionType = ResponseConstant.INTERACTION_READ_STOP;
+            }
+            _bookInteractionRepository.Insert(bi);
+
+            BookInteraction bi2 = new BookInteraction()
+            {
+                User = user,
+                Book = book,
+                InteractionType = args.InteractionType,
+                CreatedAt = DateTime.Now.AddMilliseconds(10)
+            };
+            _bookInteractionRepository.Insert(bi2);
+        }
+
         public bool AddInteraction(Book book, string email, int interactionType)
         {
             User user = _userRepository.FindSingleBy(x => x.Email == email);

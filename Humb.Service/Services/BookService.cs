@@ -8,6 +8,7 @@ using Humb.Core.DTOs;
 using Humb.Core.Entities;
 using Humb.Core.Interfaces.RepositoryInterfaces;
 using Humb.Core.Constants;
+using Humb.Core.Events;
 using Humb.Service.Helpers;
 using Humb.Core.Interfaces.ServiceInterfaces.InformClient;
 
@@ -50,7 +51,7 @@ namespace Humb.Service.Services
             _bookRepository.Insert(book);
 
             //TODO : THROW AN EVENT AND LET BOOK INTERACTION SERVICE CATCH THAT TO ADD INTERACTION.
-            //_bookInteractionService.AddInteraction(book, email, TypeConverter.BookStateToInteractionType(bookState));
+            EventHub.Publish<BookAdded>(new BookAdded(book.Id, userId, TypeConverter.BookStateToInteractionType(bookState)));
             return book.Id;
         }
 
@@ -280,7 +281,7 @@ namespace Humb.Service.Services
         {
             return _bookRepository.FindBy(x => x.BookName == bookName && x.BookState != ResponseConstant.STATE_LOST && x.BookState != ResponseConstant.STATE_ON_ROAD).OrderBy(x => Guid.NewGuid()).FirstOrDefault();
         }
-        public void FillListWithRandomBooks(int userId, List<Book> returnBooks)
+        private void FillListWithRandomBooks(int userId, List<Book> returnBooks)
         {
             var availableBookIds = _bookRepository.FindBy(x => x.OwnerId != userId &&
             (x.BookState == ResponseConstant.STATE_OPENED_TO_SHARE || x.BookState == ResponseConstant.STATE_READING)).
@@ -335,7 +336,7 @@ namespace Humb.Service.Services
                 }
             }
         }
-        public void FillScrolledListWithRandomBooks(int userId, List<Book> returnBooks, IQueryable<int> availableBookIds)
+        private void FillScrolledListWithRandomBooks(int userId, List<Book> returnBooks, IQueryable<int> availableBookIds)
         {
             if (returnBooks.Count > 0)
             {
@@ -353,7 +354,7 @@ namespace Humb.Service.Services
                 }
             }
         }
-        public void FillScrolledListWithRandomBooksByUserDistances(int userId, double latitude, double longitude, List<Book> returnBooks, IQueryable<int> bookIds)
+        private void FillScrolledListWithRandomBooksByUserDistances(int userId, double latitude, double longitude, List<Book> returnBooks, IQueryable<int> bookIds)
         {
             List<int> availableBookIds;
             if (returnBooks.Count > 0)

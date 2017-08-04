@@ -15,6 +15,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using Humb.Core.Events;
 
 namespace Humb.API
 {
@@ -30,6 +31,7 @@ namespace Humb.API
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            EventHub.Subscribe<BookAdded>(_container.Resolve<IBookInteractionService>().BookAddedListener);
         }
         public static void ConfigureWindsor(HttpConfiguration configuration)
         {

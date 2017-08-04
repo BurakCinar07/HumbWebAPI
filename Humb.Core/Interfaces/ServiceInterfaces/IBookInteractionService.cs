@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Humb.Core.Events;
 
 namespace Humb.Core.Interfaces.ServiceInterfaces
 {
@@ -19,5 +20,6 @@ namespace Humb.Core.Interfaces.ServiceInterfaces
         IEnumerable<Book> GetUserBooksOnHand(int userId);
         IEnumerable<Book> GetUserReadBooks(int userId);
         bool IsBookInteractionExist(int bookId);
+        void BookAddedListener(BookAdded args);
     }
 }

@@ -18,7 +18,6 @@ namespace Humb.Core.Events
             {
                 handlers[typeof(T)] = new List<Subscriber>();
             }
-
             handlers[typeof(T)].Add(new Subscriber(handler));
         }
         public static void Publish<T>(T eventData)
@@ -50,8 +49,7 @@ namespace Humb.Core.Events
         {
             if (handlers.ContainsKey(typeof(T)))
             {
-                List<Subscriber> _subscribers = handlers[typeof(T)];
-                _subscribers.RemoveAll(x => x._methodHandler.Equals(handler));
+                handlers[typeof(T)].RemoveAll(x => x._methodHandler.Equals(handler));
             }
         }
 
